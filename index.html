@@ -3,17 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Rainy Day</title>
+<title>Malb♥r♥ | Rainy Day</title>
 <style>
+    /* ================= 全局变量 ================= */
     :root {
         --font-main: "SimHei", "Heiti SC", "Microsoft YaHei", "PingFang SC", sans-serif;
-        /* 雨天氛围配色：雾面灰蓝 */
+        /* 极简雨天配色 */
         --bg-color: #eef2f5;
         --text-main: #2c3e50;
         --text-sub: #7f8c8d;
         --accent: #8fa8b8;
-        --card-bg: rgba(255, 255, 255, 0.6);
+        --card-bg: rgba(255, 255, 255, 0.65);
         --border-light: rgba(0, 0, 0, 0.06);
+        --pink-border: #f0c8d0; /* 标题卡片的粉色虚线 */
     }
 
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -26,7 +28,6 @@
         padding-bottom: 40px;
         overflow-x: hidden;
         line-height: 1.7;
-        /* 雨天微妙的背景光晕 */
         background-image:
             radial-gradient(circle at 20% 10%, rgba(200, 210, 220, 0.4), transparent 40%),
             radial-gradient(circle at 80% 90%, rgba(180, 190, 200, 0.3), transparent 50%);
@@ -44,7 +45,27 @@
         pointer-events: none;
     }
 
-    /* ========== 顶部极简头部 ========== */
+    /* ================= 雨滴特效 ================= */
+    .rain-container {
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        pointer-events: none;
+        z-index: -1;
+        overflow: hidden;
+    }
+    .rain-drop {
+        position: absolute;
+        background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(200, 210, 220, 0.4));
+        width: 1px;
+        height: 60px;
+        opacity: 0.4;
+        animation: fall linear infinite;
+    }
+    @keyframes fall {
+        to { transform: translateY(100vh); }
+    }
+
+    /* ================= 顶部区域 ================= */
     .top-header {
         padding: 60px 25px 30px;
         display: flex;
@@ -52,27 +73,90 @@
         align-items: center;
         position: relative;
     }
+    
+    /* 标题卡片 - 参考图一风格 */
+    .title-card {
+        position: relative;
+        width: 100%;
+        max-width: 380px;
+        padding: 35px 20px;
+        border: 2px dashed var(--pink-border);
+        border-radius: 20px;
+        text-align: center;
+        background: rgba(255, 255, 255, 0.5);
+        backdrop-filter: blur(8px);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+    }
+    
+    /* 顶部装饰小爱心/星星 */
+    .title-deco {
+        font-size: 14px;
+        color: var(--pink-border);
+        letter-spacing: 8px;
+        margin-bottom: 5px;
+    }
+
     .header-title {
-        font-size: 34px;
+        font-size: 32px;
         color: var(--text-main);
         margin: 0;
-        font-weight: 200;
-        letter-spacing: 6px;
+        font-weight: 400;
+        letter-spacing: 4px;
         font-family: var(--font-main);
     }
+    
     .date-display {
         font-size: 12px;
         color: var(--text-sub);
-        margin: 12px 0 0;
-        letter-spacing: 3px;
+        margin: 0;
+        letter-spacing: 2px;
     }
 
-    /* 顶部导航（极简文字风格） */
+    /* 标题背景图上传小框 */
+    .title-bg-box {
+        width: 100%;
+        max-width: 280px;
+        height: 80px;
+        border: 1px dashed var(--pink-border);
+        border-radius: 12px;
+        margin-top: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        overflow: hidden;
+        position: relative;
+        background: rgba(255, 255, 255, 0.3);
+        transition: all 0.3s;
+    }
+    .title-bg-box:hover { background: rgba(240, 200, 208, 0.1); }
+    .title-bg-preview {
+        width: 100%; height: 100%;
+        object-fit: cover;
+        position: absolute;
+        top: 0; left: 0;
+        display: none;
+    }
+    .title-bg-text {
+        font-size: 12px;
+        color: var(--pink-border);
+        z-index: 1;
+    }
+    .title-bg-upload { display: none; }
+
+    /* ================= 顶部导航 ================= */
     .nav-tabs {
         display: flex;
-        gap: 30px;
-        padding: 0 25px 30px;
+        gap: 20px;
+        padding: 0 20px 25px;
         justify-content: center;
+        flex-wrap: wrap;
+        position: relative;
+        z-index: 2;
     }
     .nav-tab {
         font-size: 14px;
@@ -81,28 +165,19 @@
         background: none;
         border: none;
         font-family: var(--font-main);
-        padding: 6px 0;
-        position: relative;
-        transition: color 0.3s;
+        padding: 6px 12px;
+        border-radius: 20px;
+        transition: all 0.3s;
         letter-spacing: 1px;
     }
-    .nav-tab::after {
-        content: '';
-        position: absolute;
-        bottom: 0; left: 0; width: 0; height: 1px;
-        background: var(--accent);
-        transition: width 0.3s;
-    }
     .nav-tab.active {
-        color: var(--text-main);
+        background: var(--accent);
+        color: #fff;
         font-weight: 500;
     }
-    .nav-tab.active::after {
-        width: 100%;
-    }
-    .nav-tab:hover { color: var(--text-main); }
+    .nav-tab:hover:not(.active) { background: rgba(143, 168, 184, 0.1); color: var(--text-main); }
 
-    /* ========== 卡片 ========== */
+    /* ================= 通用卡片 ================= */
     .glass-card {
         background: var(--card-bg);
         backdrop-filter: blur(12px);
@@ -113,12 +188,7 @@
         border: 1px solid rgba(255, 255, 255, 0.5);
         box-shadow: 0 4px 24px rgba(0, 0, 0, 0.03);
         position: relative;
-        transition: box-shadow 0.3s;
     }
-    .glass-card:hover {
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
-    }
-
     .card-label {
         font-size: 11px;
         color: var(--text-sub);
@@ -131,479 +201,229 @@
 
     /* 输入区 */
     .glass-card textarea {
-        width: 100%;
-        border: none;
-        resize: none;
-        font-size: 15px;
-        font-family: var(--font-main);
-        outline: none;
-        min-height: 90px;
-        color: var(--text-main);
-        padding: 0;
-        background: transparent;
-        line-height: 1.7;
+        width: 100%; border: none; resize: none; font-size: 15px; font-family: var(--font-main);
+        outline: none; min-height: 90px; color: var(--text-main); padding: 0;
+        background: transparent; line-height: 1.7;
     }
     .glass-card textarea::placeholder { color: #b0b8bf; }
-
-    .input-row {
-        display: flex;
-        gap: 12px;
-        margin-top: 18px;
-        align-items: center;
-        flex-wrap: wrap;
-    }
+    .input-row { display: flex; gap: 12px; margin-top: 18px; align-items: center; flex-wrap: wrap; }
     .input-row input[type="text"] {
-        flex: 1;
-        border: none;
-        border-bottom: 1px solid var(--border-light);
-        border-radius: 0;
-        padding: 8px 0;
-        font-size: 13px;
-        outline: none;
-        background: transparent;
-        color: var(--text-sub);
-        font-family: var(--font-main);
-        transition: border-color 0.3s;
+        flex: 1; border: none; border-bottom: 1px solid var(--border-light);
+        border-radius: 0; padding: 8px 0; font-size: 13px; outline: none;
+        background: transparent; color: var(--text-sub); font-family: var(--font-main);
     }
-    .input-row input[type="text"]:focus {
-        border-bottom-color: var(--accent);
-    }
-    .input-row input[type="file"] {
-        font-size: 12px;
-        color: var(--text-sub);
-        width: 100%;
-    }
-
+    .input-row input[type="file"] { font-size: 12px; color: var(--text-sub); width: 100%; }
+    
     /* 标签输入 */
-    .tag-input-row {
-        display: flex;
-        gap: 12px;
-        margin-top: 18px;
-        align-items: flex-end;
-    }
+    .tag-input-row { display: flex; gap: 12px; margin-top: 18px; align-items: flex-end; }
     .tag-input-row input {
-        flex: 1;
-        border: none;
-        border-bottom: 1px solid var(--border-light);
-        border-radius: 0;
-        padding: 8px 0;
-        font-size: 13px;
-        outline: none;
-        background: transparent;
-        color: var(--text-sub);
-        font-family: var(--font-main);
-        transition: border-color 0.3s;
-    }
-    .tag-input-row input:focus {
-        border-bottom-color: var(--accent);
+        flex: 1; border: none; border-bottom: 1px solid var(--border-light);
+        border-radius: 0; padding: 8px 0; font-size: 13px; outline: none;
+        background: transparent; color: var(--text-sub); font-family: var(--font-main);
     }
     .tag-input-row button {
-        background: none;
-        border: 1px solid var(--accent);
-        color: var(--accent);
-        padding: 8px 16px;
-        border-radius: 20px;
-        font-size: 12px;
-        cursor: pointer;
-        font-family: var(--font-main);
-        transition: all 0.3s;
-        white-space: nowrap;
+        background: none; border: 1px solid var(--accent); color: var(--accent);
+        padding: 8px 16px; border-radius: 20px; font-size: 12px; cursor: pointer;
+        font-family: var(--font-main); transition: all 0.3s; white-space: nowrap;
     }
-    .tag-input-row button:hover {
-        background: var(--accent);
-        color: #fff;
-    }
+    .tag-input-row button:hover { background: var(--accent); color: #fff; }
 
-    .selected-tags {
-        display: flex;
-        gap: 8px;
-        flex-wrap: wrap;
-        margin-top: 15px;
-    }
+    .selected-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 15px; }
     .selected-tag {
-        background: rgba(143, 168, 184, 0.12);
-        padding: 4px 12px;
-        border-radius: 20px;
-        font-size: 12px;
-        color: var(--accent);
-        display: flex;
-        align-items: center;
-        gap: 6px;
+        background: rgba(143, 168, 184, 0.12); padding: 4px 12px; border-radius: 20px;
+        font-size: 12px; color: var(--accent); display: flex; align-items: center; gap: 6px;
     }
-    .selected-tag button {
-        background: none;
-        border: none;
-        color: var(--accent);
-        cursor: pointer;
-        font-size: 14px;
-        padding: 0;
-        line-height: 1;
-    }
+    .selected-tag button { background: none; border: none; color: var(--accent); cursor: pointer; font-size: 14px; padding: 0; line-height: 1; }
 
-    /* 操作按钮 */
-    .editor-actions {
-        display: flex;
-        justify-content: flex-end;
-        margin-top: 25px;
-    }
+    /* 按钮 */
     .btn {
-        border: none;
-        padding: 10px 28px;
-        border-radius: 24px;
-        font-size: 14px;
-        cursor: pointer;
-        transition: all 0.3s;
-        background: var(--accent);
-        color: #fff;
-        font-family: var(--font-main);
-        letter-spacing: 1px;
+        border: none; padding: 10px 28px; border-radius: 24px; font-size: 14px;
+        cursor: pointer; transition: all 0.3s; background: var(--accent); color: #fff;
+        font-family: var(--font-main); letter-spacing: 1px;
     }
     .btn:hover { opacity: 0.85; }
     .btn:disabled { opacity: 0.4; }
-    .btn-outline {
-        background: transparent;
-        color: var(--accent);
-        border: 1px solid var(--accent);
-    }
-    .btn-outline:hover {
-        background: var(--accent);
-        color: #fff;
-    }
+    .btn-outline { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
+    .btn-outline:hover { background: var(--accent); color: #fff; }
 
-    /* 日期过滤 */
-    .date-filter {
-        padding: 0 25px 25px;
+    /* ================= 聊天界面 ================= */
+    .chat-container {
+        margin: 0 25px 25px;
+        background: var(--card-bg);
+        backdrop-filter: blur(12px);
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.03);
         display: flex;
-        align-items: center;
-        gap: 15px;
-        justify-content: center;
+        flex-direction: column;
+        height: 65vh;
+        overflow: hidden;
     }
-    .date-filter input[type="date"] {
-        border: none;
+    .chat-header {
+        padding: 15px 20px;
         border-bottom: 1px solid var(--border-light);
-        border-radius: 0;
-        padding: 8px 0;
-        font-size: 13px;
-        font-family: var(--font-main);
-        background: transparent;
-        outline: none;
-        color: var(--text-sub);
-    }
-    .date-filter button {
-        background: none;
-        border: none;
-        font-size: 13px;
-        color: var(--accent);
-        cursor: pointer;
-        font-family: var(--font-main);
-    }
-
-    /* ========== 侧边栏 ========== */
-    .sidebar {
-        position: fixed;
-        top: 0; left: 0;
-        width: 280px;
-        height: 100vh;
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border-right: 1px solid rgba(255, 255, 255, 0.5);
-        padding: 40px 25px;
-        overflow-y: auto;
-        z-index: 2000;
-        transform: translateX(-100%);
-        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        box-shadow: 4px 0 30px rgba(0, 0, 0, 0.04);
-    }
-    .sidebar.open { transform: translateX(0); }
-    .sidebar-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 35px;
-    }
-    .sidebar h2 {
-        font-size: 14px;
-        margin: 0;
-        font-weight: 400;
+        font-size: 13px;
         color: var(--text-sub);
-        letter-spacing: 3px;
     }
-    .close-sidebar {
-        background: none;
-        border: none;
-        font-size: 24px;
-        cursor: pointer;
-        color: #ccc;
-        padding: 0;
-        line-height: 1;
-    }
-
-    /* 头像 */
-    .avatar-wrapper {
-        text-align: center;
-        margin-bottom: 35px;
-    }
-    .avatar {
-        width: 72px;
-        height: 72px;
-        border-radius: 50%;
-        margin: 0 auto;
+    .chat-messages {
+        flex: 1;
+        padding: 20px;
+        overflow-y: auto;
         display: flex;
-        align-items: center;
-        justify-content: center;
-        background: rgba(143, 168, 184, 0.08);
-        border: 1px dashed var(--accent);
-        cursor: pointer;
-        overflow: hidden;
-        position: relative;
-        transition: all 0.3s;
+        flex-direction: column;
+        gap: 15px;
     }
-    .avatar:hover {
-        background: rgba(143, 168, 184, 0.15);
-        border-style: solid;
+    .message-row { display: flex; gap: 10px; max-width: 85%; }
+    .message-row.user { align-self: flex-end; flex-direction: row-reverse; }
+    .message-row.ai { align-self: flex-start; }
+    
+    .message-avatar {
+        width: 36px; height: 36px; border-radius: 50%;
+        background: #e0e6ed; display: flex; align-items: center; justify-content: center;
+        font-size: 16px; flex-shrink: 0; overflow: hidden;
     }
+    .message-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    
+    .message-bubble {
+        padding: 10px 15px; border-radius: 16px; font-size: 14px; line-height: 1.5;
+        word-break: break-word;
+    }
+    .message-row.user .message-bubble { background: var(--accent); color: #fff; border-top-right-radius: 4px; }
+    .message-row.ai .message-bubble { background: rgba(0,0,0,0.05); color: var(--text-main); border-top-left-radius: 4px; }
+    
+    .chat-input-area {
+        padding: 15px 20px;
+        border-top: 1px solid var(--border-light);
+        display: flex;
+        gap: 10px;
+        align-items: flex-end;
+    }
+    .chat-input-area textarea {
+        flex: 1; border: 1px solid var(--border-light); border-radius: 12px;
+        padding: 10px 15px; font-size: 14px; font-family: var(--font-main);
+        outline: none; resize: none; height: 44px; max-height: 120px;
+        background: rgba(255,255,255,0.5); color: var(--text-main); line-height: 1.4;
+    }
+    .chat-input-area button {
+        background: var(--accent); color: #fff; border: none;
+        width: 44px; height: 44px; border-radius: 50%; cursor: pointer;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 18px; transition: 0.3s;
+    }
+    .chat-input-area button:hover { opacity: 0.8; }
+    .chat-input-area button:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* ================= 笔记列表 ================= */
+    .note-list { padding: 0 25px; display: flex; flex-direction: column; gap: 18px; }
+    .note-card {
+        background: var(--card-bg); backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.5); border-radius: 14px;
+        padding: 22px; box-shadow: 0 2px 16px rgba(0, 0, 0, 0.02);
+    }
+    .note-date { font-size: 11px; color: #b0b8bf; margin-bottom: 12px; display: flex; justify-content: space-between; }
+    .note-tags { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
+    .note-tag { background: rgba(143, 168, 184, 0.1); padding: 2px 10px; border-radius: 12px; font-size: 11px; color: var(--accent); }
+    .note-content { font-size: 15px; line-height: 1.8; white-space: pre-wrap; margin-bottom: 12px; color: var(--text-main); }
+    .note-media { max-width: 100%; border-radius: 10px; margin-top: 12px; border: 1px solid var(--border-light); }
+    .note-link { display: inline-block; margin-top: 10px; font-size: 13px; color: var(--accent); text-decoration: underline; word-break: break-all; }
+    .note-actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border-light); }
+    .note-actions button {
+        font-size: 12px; padding: 6px 18px; border-radius: 16px; border: none; cursor: pointer;
+        transition: all 0.3s; font-family: var(--font-main); background: transparent;
+        color: var(--text-sub); border: 1px solid var(--border-light);
+    }
+    .note-actions button:hover { background: rgba(143, 168, 184, 0.08); color: var(--text-main); }
+    .btn-danger { color: #e74c3c !important; border-color: rgba(231, 76, 60, 0.2) !important; }
+    .btn-danger:hover { background: rgba(231, 76, 60, 0.06) !important; }
+
+    /* 空状态 */
+    .empty-tip { text-align: center; color: #b0b8bf; padding: 60px 20px; font-size: 14px; letter-spacing: 1px; }
+
+    /* ================= 侧边栏与设置弹窗 ================= */
+    .sidebar {
+        position: fixed; top: 0; left: 0; width: 280px; height: 100vh;
+        background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px);
+        border-right: 1px solid rgba(255, 255, 255, 0.5); padding: 40px 25px;
+        overflow-y: auto; z-index: 2000; transform: translateX(-100%);
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: 4px 0 30px rgba(0, 0, 0, 0.04);
+    }
+    .sidebar.open { transform: translateX(0); }
+    .sidebar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 35px; }
+    .sidebar h2 { font-size: 14px; margin: 0; font-weight: 400; color: var(--text-sub); letter-spacing: 3px; }
+    .close-sidebar { background: none; border: none; font-size: 24px; cursor: pointer; color: #ccc; padding: 0; line-height: 1; }
+    
+    .avatar-wrapper { text-align: center; margin-bottom: 35px; }
+    .avatar {
+        width: 72px; height: 72px; border-radius: 50%; margin: 0 auto;
+        display: flex; align-items: center; justify-content: center;
+        background: rgba(143, 168, 184, 0.08); border: 1px dashed var(--accent);
+        cursor: pointer; overflow: hidden; position: relative; transition: all 0.3s;
+    }
+    .avatar:hover { background: rgba(143, 168, 184, 0.15); border-style: solid; }
     .avatar-inner { width: 100%; height: 100%; object-fit: cover; display: none; }
     .avatar-text { color: #b0b8bf; font-size: 11px; }
     .avatar-upload { display: none; }
 
-    /* 标签列表 */
     .tag-list { list-style: none; padding: 0; margin: 0; }
     .tag-list li {
-        padding: 12px 10px;
-        margin-bottom: 4px;
-        font-size: 14px;
-        color: var(--text-sub);
-        cursor: pointer;
-        border-radius: 8px;
-        transition: all 0.2s;
-        display: flex;
-        align-items: center;
-        gap: 10px;
+        padding: 12px 10px; margin-bottom: 4px; font-size: 14px; color: var(--text-sub);
+        cursor: pointer; border-radius: 8px; transition: all 0.2s;
+        display: flex; align-items: center; gap: 10px;
     }
-    .tag-list li:hover {
-        background: rgba(143, 168, 184, 0.08);
-        color: var(--text-main);
-    }
-    .tag-list li.active {
-        background: rgba(143, 168, 184, 0.12);
-        color: var(--text-main);
-        font-weight: 500;
-    }
+    .tag-list li:hover { background: rgba(143, 168, 184, 0.08); color: var(--text-main); }
+    .tag-list li.active { background: rgba(143, 168, 184, 0.12); color: var(--text-main); font-weight: 500; }
 
-    /* 日期索引 */
     .date-index-section { margin-top: 30px; }
-    .date-index-section h3 {
-        font-size: 11px;
-        color: var(--text-sub);
-        margin-bottom: 12px;
-        letter-spacing: 2px;
-        text-transform: uppercase;
-    }
+    .date-index-section h3 { font-size: 11px; color: var(--text-sub); margin-bottom: 12px; letter-spacing: 2px; text-transform: uppercase; }
     .date-picker-input {
-        width: 100%;
-        padding: 10px 0;
-        border: none;
-        border-bottom: 1px solid var(--border-light);
-        border-radius: 0;
-        font-family: var(--font-main);
-        font-size: 13px;
-        outline: none;
-        background: transparent;
-        color: var(--text-sub);
+        width: 100%; padding: 10px 0; border: none; border-bottom: 1px solid var(--border-light);
+        border-radius: 0; font-family: var(--font-main); font-size: 13px;
+        outline: none; background: transparent; color: var(--text-sub);
     }
 
-    /* 遮罩层 */
     .overlay {
-        position: fixed;
-        top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(0, 0, 0, 0.15);
-        backdrop-filter: blur(4px);
-        z-index: 1500;
-        display: none;
-        opacity: 0;
-        transition: opacity 0.3s;
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0, 0, 0, 0.15); backdrop-filter: blur(4px); z-index: 1500;
+        display: none; opacity: 0; transition: opacity 0.3s;
     }
     .overlay.open { display: block; opacity: 1; }
 
-    /* ========== 笔记列表 ========== */
-    .note-list {
-        padding: 0 25px;
-        display: flex;
-        flex-direction: column;
-        gap: 18px;
-    }
-    .note-card {
-        background: var(--card-bg);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.5);
-        border-radius: 14px;
-        padding: 22px;
-        box-shadow: 0 2px 16px rgba(0, 0, 0, 0.02);
-        transition: box-shadow 0.3s;
-    }
-    .note-card:hover {
-        box-shadow: 0 6px 24px rgba(0, 0, 0, 0.04);
-    }
-    .note-date {
-        font-size: 11px;
-        color: #b0b8bf;
-        margin-bottom: 12px;
-        display: flex;
-        justify-content: space-between;
-        letter-spacing: 0.5px;
-    }
-    .note-tags {
-        display: flex;
-        gap: 6px;
-        margin-bottom: 12px;
-        flex-wrap: wrap;
-    }
-    .note-tag {
-        background: rgba(143, 168, 184, 0.1);
-        padding: 2px 10px;
-        border-radius: 12px;
-        font-size: 11px;
-        color: var(--accent);
-    }
-    .note-content {
-        font-size: 15px;
-        line-height: 1.8;
-        white-space: pre-wrap;
-        margin-bottom: 12px;
-        color: var(--text-main);
-        font-family: var(--font-main);
-    }
-    .note-media {
-        max-width: 100%;
-        border-radius: 10px;
-        margin-top: 12px;
-        border: 1px solid var(--border-light);
-    }
-    .note-link {
-        display: inline-block;
-        margin-top: 10px;
-        font-size: 13px;
-        color: var(--accent);
-        text-decoration: underline;
-        text-underline-offset: 3px;
-        word-break: break-all;
-    }
-    .note-actions {
-        display: flex;
-        justify-content: flex-end;
-        gap: 12px;
-        margin-top: 16px;
-        padding-top: 16px;
-        border-top: 1px solid var(--border-light);
-    }
-    .note-actions button {
-        font-size: 12px;
-        padding: 6px 18px;
-        border-radius: 16px;
-        border: none;
-        cursor: pointer;
-        transition: all 0.3s;
-        font-family: var(--font-main);
-        background: transparent;
-        color: var(--text-sub);
-        border: 1px solid var(--border-light);
-    }
-    .note-actions button:hover {
-        background: rgba(143, 168, 184, 0.08);
-        color: var(--text-main);
-    }
-    .btn-danger {
-        color: #e74c3c !important;
-        border-color: rgba(231, 76, 60, 0.2) !important;
-    }
-    .btn-danger:hover {
-        background: rgba(231, 76, 60, 0.06) !important;
-    }
-
-    /* 空状态 */
-    .empty-tip {
-        text-align: center;
-        color: #b0b8bf;
-        padding: 60px 20px;
-        font-size: 14px;
-        letter-spacing: 1px;
-    }
-
-    /* ========== 设置弹窗 ========== */
+    /* 设置弹窗 */
     .settings-modal {
-        position: fixed;
-        top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(0, 0, 0, 0.2);
-        backdrop-filter: blur(6px);
-        z-index: 3000;
-        display: none;
-        justify-content: center;
-        align-items: center;
-        padding: 20px;
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0, 0, 0, 0.2); backdrop-filter: blur(6px);
+        z-index: 3000; display: none; justify-content: center; align-items: center; padding: 20px;
     }
     .settings-modal.open { display: flex; }
     .settings-content {
-        background: rgba(255, 255, 255, 0.98);
-        border: 1px solid rgba(255, 255, 255, 0.8);
-        border-radius: 20px;
-        width: 100%;
-        max-width: 380px;
-        padding: 35px;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+        background: rgba(255, 255, 255, 0.98); border: 1px solid rgba(255, 255, 255, 0.8);
+        border-radius: 20px; width: 100%; max-width: 380px; padding: 35px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1); max-height: 90vh; overflow-y: auto;
     }
-    .settings-content h3 {
-        margin: 0 0 25px;
-        color: var(--text-main);
-        font-size: 16px;
-        font-weight: 400;
-        letter-spacing: 2px;
+    .settings-content h3 { margin: 0 0 25px; color: var(--text-main); font-size: 16px; font-weight: 400; letter-spacing: 2px; }
+    .settings-content label { font-size: 12px; color: var(--text-sub); display: block; margin-bottom: 8px; letter-spacing: 1px; }
+    .settings-content input[type="file"] { font-size: 12px; width: 100%; margin-bottom: 22px; color: var(--text-sub); }
+    .settings-content input[type="text"], .settings-content textarea {
+        width: 100%; padding: 10px 0; border: none; border-bottom: 1px solid var(--border-light);
+        border-radius: 0; margin-bottom: 22px; font-size: 13px; outline: none;
+        background: transparent; font-family: var(--font-main); color: var(--text-sub); resize: none;
     }
-    .settings-content label {
-        font-size: 12px;
-        color: var(--text-sub);
-        display: block;
-        margin-bottom: 8px;
-        letter-spacing: 1px;
-    }
-    .settings-content input[type="file"] {
-        font-size: 12px;
-        width: 100%;
-        margin-bottom: 22px;
-        color: var(--text-sub);
-    }
-    .settings-content input[type="text"] {
-        width: 100%;
-        padding: 10px 0;
-        border: none;
-        border-bottom: 1px solid var(--border-light);
-        border-radius: 0;
-        margin-bottom: 22px;
-        font-size: 13px;
-        outline: none;
-        background: transparent;
-        font-family: var(--font-main);
-        color: var(--text-sub);
-    }
-    .settings-content .btn {
-        width: 100%;
-        margin-top: 10px;
-        padding: 12px;
-        font-size: 13px;
-    }
-    .settings-content .btn-grey {
-        background: transparent;
-        color: var(--text-sub);
-        border: 1px solid var(--border-light);
-    }
-    .settings-content .btn-grey:hover {
-        background: rgba(0, 0, 0, 0.03);
-        color: var(--text-main);
-    }
+    .settings-content .btn { width: 100%; margin-top: 10px; padding: 12px; font-size: 13px; }
+    .settings-content .btn-grey { background: transparent; color: var(--text-sub); border: 1px solid var(--border-light); }
+    .settings-content .btn-grey:hover { background: rgba(0, 0, 0, 0.03); color: var(--text-main); }
+
+    /* 视图显示隐藏 */
+    .view-section { display: none; }
+    .view-section.active { display: block; }
 </style>
 </head>
 <body>
+
+<!-- 雨滴容器 -->
+<div class="rain-container" id="rain-container"></div>
 
 <div class="overlay" id="overlay"></div>
 
@@ -615,11 +435,11 @@
     </div>
 
     <div class="avatar-wrapper">
-        <div class="avatar" id="avatar-img" onclick="document.getElementById('avatar-upload').click()">
-            <img src="" alt="" class="avatar-inner" id="avatar-inner">
-            <span class="avatar-text" id="avatar-text">上传</span>
+        <div class="avatar" id="user-avatar" onclick="document.getElementById('user-avatar-upload').click()">
+            <img src="" alt="" class="avatar-inner" id="user-avatar-inner">
+            <span class="avatar-text" id="user-avatar-text">上传头像</span>
         </div>
-        <input type="file" id="avatar-upload" class="avatar-upload" accept="image/*">
+        <input type="file" id="user-avatar-upload" class="avatar-upload" accept="image/*">
     </div>
 
     <ul class="tag-list" id="tag-list"></ul>
@@ -638,59 +458,119 @@
 <div class="settings-modal" id="settings-modal">
     <div class="settings-content">
         <h3>⚙️ 设置</h3>
-        <label>上传自定义背景图</label>
+        
+        <h4 style="font-size:13px; color:#333; margin-bottom:15px;">🖼️ 背景设置</h4>
+        <label>上传自定义背景图（笔记界面）</label>
         <input type="file" id="bg-upload" accept="image/*">
         <label>背景图片链接</label>
         <input type="text" id="bg-url-input" placeholder="https://example.com/bg.jpg">
         <button class="btn" onclick="saveBgFromUrl()">保存背景</button>
         <button class="btn btn-grey" onclick="resetBackground()">恢复默认背景</button>
+
+        <hr style="border:none; border-top:1px solid #eee; margin:25px 0;">
+
+        <h4 style="font-size:13px; color:#333; margin-bottom:15px;">🤖 AI 聊天设置</h4>
+        <label>AI 头像</label>
+        <input type="file" id="ai-avatar-upload" accept="image/*">
+        <label>AI 名字</label>
+        <input type="text" id="ai-name-input" placeholder="例如：小助理">
+        <label>AI 性格设定（提示词）</label>
+        <textarea id="ai-personality-input" rows="3" placeholder="例如：你是一个温柔的聊天伙伴，喜欢用可爱的语气说话。"></textarea>
+        <label>API 地址（如 DeepSeek）</label>
+        <input type="text" id="ai-api-url" placeholder="https://api.deepseek.com/chat/completions">
+        <label>API Key</label>
+        <input type="text" id="ai-api-key" placeholder="sk-xxxxxxxx">
+        <label>模型名称</label>
+        <input type="text" id="ai-model-input" placeholder="deepseek-chat">
+
+        <button class="btn" onclick="saveAISettings()">保存 AI 设置</button>
         <button class="btn btn-grey" onclick="closeSettings()">关闭</button>
     </div>
 </div>
 
-<!-- 顶部 -->
+<!-- 顶部区域 -->
 <div class="top-header">
     <button class="menu-btn" id="menu-btn" style="position: absolute; left: 25px; top: 55px; background: none; border: none; font-size: 22px; cursor: pointer; color: var(--text-sub);">☰</button>
-    <h1 class="header-title">Rainy Day</h1>
-    <p class="date-display" id="date-display"></p>
+    
+    <!-- 标题卡片 -->
+    <div class="title-card">
+        <div class="title-deco">♥ ★ ♥ ★ ♥</div>
+        <h1 class="header-title">Malb♥r♥</h1>
+        <p class="date-display" id="date-display"></p>
+        <!-- 标题背景图上传小框 -->
+        <div class="title-bg-box" id="title-bg-box" onclick="document.getElementById('title-bg-upload').click()">
+            <img src="" id="title-bg-preview" class="title-bg-preview">
+            <span class="title-bg-text" id="title-bg-text">点击上传标题背景图</span>
+        </div>
+        <input type="file" id="title-bg-upload" class="title-bg-upload" accept="image/*">
+    </div>
 </div>
 
-<!-- 切换栏 -->
+<!-- 顶部导航 -->
 <div class="nav-tabs">
-    <div class="nav-tab active" id="tab-notes">笔记</div>
-    <div class="nav-tab" id="tab-trash">垃圾桶</div>
-    <div class="nav-tab" id="tab-settings">设置</div>
+    <div class="nav-tab active" id="tab-notes">📝 笔记</div>
+    <div class="nav-tab" id="tab-trash">🗑️ 垃圾桶</div>
+    <div class="nav-tab" id="tab-chat">💬 AI 聊天</div>
+    <div class="nav-tab" id="tab-settings">⚙️ 设置</div>
 </div>
 
-<!-- 编辑器 -->
-<div class="glass-card" id="editor-card">
-    <div class="card-label">NEW ENTRY</div>
-    <textarea id="note-content" placeholder="今天下雨了，有什么想写的吗..."></textarea>
-    <div class="input-row">
-        <input type="text" id="note-link" placeholder="添加链接（选填）">
+<!-- ================= 视图 1：笔记 ================= -->
+<div class="view-section active" id="view-notes">
+    <!-- 编辑器 -->
+    <div class="glass-card" id="editor-card">
+        <div class="card-label">NEW ENTRY</div>
+        <textarea id="note-content" placeholder="今天下雨了，有什么想写的吗..."></textarea>
+        <div class="input-row">
+            <input type="text" id="note-link" placeholder="添加链接（选填）">
+        </div>
+        <div class="input-row">
+            <input type="file" id="note-media" accept="image/*,video/*,.pdf,.doc,.docx,.txt">
+            <span id="file-name" style="font-size:12px; color:var(--text-sub);"></span>
+        </div>
+        <div class="tag-input-row">
+            <input type="text" id="tag-input" placeholder="输入标签，回车添加">
+            <button id="add-tag-btn">添加</button>
+        </div>
+        <div class="selected-tags" id="selected-tags"></div>
+        <div class="editor-actions" style="display: flex; justify-content: flex-end; margin-top: 25px;">
+            <button class="btn" id="save-btn">记录一下 ♡</button>
+        </div>
     </div>
-    <div class="input-row">
-        <input type="file" id="note-media" accept="image/*,video/*,.pdf,.doc,.docx,.txt">
-        <span id="file-name" style="font-size:12px; color:var(--text-sub);"></span>
+
+    <!-- 日期过滤 -->
+    <div class="date-filter" style="padding: 0 25px 25px; display: flex; align-items: center; gap: 15px; justify-content: center;">
+        <input type="date" id="filter-date">
+        <button id="clear-date">显示全部</button>
     </div>
-    <div class="tag-input-row">
-        <input type="text" id="tag-input" placeholder="输入标签，回车添加">
-        <button id="add-tag-btn">添加</button>
-    </div>
-    <div class="selected-tags" id="selected-tags"></div>
-    <div class="editor-actions">
-        <button class="btn" id="save-btn">记录一下 ♡</button>
-    </div>
+
+    <!-- 笔记列表 -->
+    <div class="note-list" id="note-list"></div>
 </div>
 
-<!-- 日期过滤 -->
-<div class="date-filter">
-    <input type="date" id="filter-date">
-    <button id="clear-date">显示全部</button>
+<!-- ================= 视图 2：垃圾桶 ================= -->
+<div class="view-section" id="view-trash">
+    <div class="note-list" id="trash-list"></div>
 </div>
 
-<!-- 笔记列表 -->
-<div class="note-list" id="note-list"></div>
+<!-- ================= 视图 3：AI 聊天 ================= -->
+<div class="view-section" id="view-chat">
+    <div class="chat-container">
+        <div class="chat-header">
+            <span id="chat-ai-name">AI 伙伴</span>
+            <span style="font-size:11px; cursor:pointer;" onclick="clearChatHistory()">清空记录</span>
+        </div>
+        <div class="chat-messages" id="chat-messages">
+            <div class="message-row ai">
+                <div class="message-avatar" id="chat-ai-avatar-display">🤖</div>
+                <div class="message-bubble">你好呀，我是你的专属 AI 伙伴，今天想聊点什么？</div>
+            </div>
+        </div>
+        <div class="chat-input-area">
+            <textarea id="chat-input" placeholder="输入消息..." rows="1" onkeydown="if(event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); sendChatMessage(); }"></textarea>
+            <button id="chat-send-btn" onclick="sendChatMessage()">↑</button>
+        </div>
+    </div>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
@@ -699,14 +579,32 @@ const SUPABASE_URL = "https://zpsbdymlofvzyskymagh.supabase.co";
 const SUPABASE_KEY = "sb_publishable_6jazDy0kesZQBPSBaY77Rg_qMTM6Hze";
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-/* ================= 2. 状态变量 ================= */
+/* ================= 2. 全局状态 ================= */
 let notes = [];
 let currentTag = 'all';
 let currentView = 'notes';
 let selectedDate = '';
 let pendingTags = [];
+let chatHistory = JSON.parse(localStorage.getItem('chatHistory')) || [];
 
-/* ================= 3. 侧边栏逻辑 ================= */
+/* ================= 3. 初始化雨滴效果 ================= */
+function initRain() {
+    const container = document.getElementById('rain-container');
+    const dropCount = 40; // 雨滴数量，保持性能
+    for (let i = 0; i < dropCount; i++) {
+        const drop = document.createElement('div');
+        drop.className = 'rain-drop';
+        drop.style.left = Math.random() * 100 + '%';
+        drop.style.animationDuration = (Math.random() * 2 + 2) + 's'; // 2-4秒下落
+        drop.style.animationDelay = Math.random() * 2 + 's';
+        drop.style.height = (Math.random() * 30 + 30) + 'px'; // 长度 30-60px
+        drop.style.opacity = Math.random() * 0.3 + 0.1; // 非常淡的透明度
+        container.appendChild(drop);
+    }
+}
+initRain();
+
+/* ================= 4. 侧边栏与导航逻辑 ================= */
 const sidebar = document.getElementById('sidebar');
 const overlay = document.getElementById('overlay');
 function openSidebar() { sidebar.classList.add('open'); overlay.classList.add('open'); }
@@ -715,15 +613,46 @@ document.getElementById('menu-btn').onclick = openSidebar;
 document.getElementById('close-sidebar').onclick = closeSidebar;
 overlay.onclick = closeSidebar;
 
-// 用户头像上传
-document.getElementById('avatar-upload').onchange = (e) => {
+// 切换视图
+function switchView(view) {
+    currentView = view;
+    // 更新标签样式
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
+    
+    if (view === 'notes') {
+        document.getElementById('tab-notes').classList.add('active');
+        document.getElementById('view-notes').classList.add('active');
+    } else if (view === 'trash') {
+        document.getElementById('tab-trash').classList.add('active');
+        document.getElementById('view-trash').classList.add('active');
+        renderTrash();
+    } else if (view === 'chat') {
+        document.getElementById('tab-chat').classList.add('active');
+        document.getElementById('view-chat').classList.add('active');
+        renderChatHistory();
+    } else if (view === 'settings') {
+        document.getElementById('tab-settings').classList.add('active');
+        openSettings();
+        return; // 设置是弹窗，不需要切换视图
+    }
+    if (view !== 'trash') renderNotes();
+}
+document.getElementById('tab-notes').onclick = () => switchView('notes');
+document.getElementById('tab-trash').onclick = () => switchView('trash');
+document.getElementById('tab-chat').onclick = () => switchView('chat');
+document.getElementById('tab-settings').onclick = () => switchView('settings');
+
+/* ================= 5. 用户头像与标题背景上传 ================= */
+// 用户头像
+document.getElementById('user-avatar-upload').onchange = (e) => {
     const file = e.target.files[0];
     if (file) {
         const reader = new FileReader();
         reader.onload = (ev) => {
-            document.getElementById('avatar-inner').src = ev.target.result;
-            document.getElementById('avatar-inner').style.display = 'block';
-            document.getElementById('avatar-text').style.display = 'none';
+            document.getElementById('user-avatar-inner').src = ev.target.result;
+            document.getElementById('user-avatar-inner').style.display = 'block';
+            document.getElementById('user-avatar-text').style.display = 'none';
             localStorage.setItem('userAvatar', ev.target.result);
         };
         reader.readAsDataURL(file);
@@ -731,183 +660,57 @@ document.getElementById('avatar-upload').onchange = (e) => {
 };
 const savedAvatar = localStorage.getItem('userAvatar');
 if (savedAvatar) {
-    document.getElementById('avatar-inner').src = savedAvatar;
-    document.getElementById('avatar-inner').style.display = 'block';
-    document.getElementById('avatar-text').style.display = 'none';
+    document.getElementById('user-avatar-inner').src = savedAvatar;
+    document.getElementById('user-avatar-inner').style.display = 'block';
+    document.getElementById('user-avatar-text').style.display = 'none';
+}
+
+// 标题背景图
+document.getElementById('title-bg-upload').onchange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+            document.getElementById('title-bg-preview').src = ev.target.result;
+            document.getElementById('title-bg-preview').style.display = 'block';
+            document.getElementById('title-bg-text').style.display = 'none';
+            localStorage.setItem('titleBg', ev.target.result);
+        };
+        reader.readAsDataURL(file);
+    }
+};
+const savedTitleBg = localStorage.getItem('titleBg');
+if (savedTitleBg) {
+    document.getElementById('title-bg-preview').src = savedTitleBg;
+    document.getElementById('title-bg-preview').style.display = 'block';
+    document.getElementById('title-bg-text').style.display = 'none';
 }
 
 // 日期显示
 const today = new Date();
 document.getElementById('date-display').textContent = `${today.getFullYear()} / ${today.getMonth()+1} / ${today.getDate()}`;
 
-/* ================= 4. 背景设置与恢复默认 ================= */
-function loadBackground() {
-    const savedBg = localStorage.getItem('customBg');
-    if (savedBg) {
-        document.body.style.backgroundImage = `url('${savedBg}')`;
-    }
-}
-loadBackground();
-
-function openSettings() { document.getElementById('settings-modal').classList.add('open'); document.getElementById('bg-url-input').value = localStorage.getItem('customBg') || ''; }
-function closeSettings() { document.getElementById('settings-modal').classList.remove('open'); }
-
-document.getElementById('bg-upload').onchange = (e) => {
-    const file = e.target.files[0]; if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-        const base64 = ev.target.result;
-        localStorage.setItem('customBg', base64);
-        document.body.style.backgroundImage = `url('${base64}')`;
-        alert("背景已保存到本地！");
-    };
-    reader.readAsDataURL(file);
+/* ================= 6. 笔记逻辑 ================= */
+document.getElementById('add-tag-btn').onclick = () => {
+    const input = document.getElementById('tag-input');
+    const tag = input.value.trim();
+    if (tag && !pendingTags.includes(tag)) { pendingTags.push(tag); renderPendingTags(); }
+    input.value = '';
 };
-
-function saveBgFromUrl() {
-    const url = document.getElementById('bg-url-input').value.trim();
-    if (url) { localStorage.setItem('customBg', url); document.body.style.backgroundImage = `url('${url}')`; alert("背景已保存！"); closeSettings(); }
-    else { alert("请输入图片链接"); }
-}
-
-function resetBackground() {
-    localStorage.removeItem('customBg');
-    document.body.style.backgroundImage = '';
-    alert("已恢复为系统默认背景！");
-    closeSettings();
-}
-
-/* ================= 5. 标签与视图切换逻辑 ================= */
+document.getElementById('tag-input').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); document.getElementById('add-tag-btn').click(); }
+});
 function renderPendingTags() {
     const box = document.getElementById('selected-tags');
     box.innerHTML = pendingTags.map((t, i) => `<span class="selected-tag">${escapeHTML(t)} <button onclick="removePendingTag(${i})">×</button></span>`).join("");
 }
 function removePendingTag(index) { pendingTags.splice(index, 1); renderPendingTags(); }
-function addPendingTag() {
-    const input = document.getElementById('tag-input');
-    const tag = input.value.trim();
-    if (tag && !pendingTags.includes(tag)) { pendingTags.push(tag); renderPendingTags(); }
-    input.value = '';
-}
-document.getElementById('add-tag-btn').onclick = addPendingTag;
-document.getElementById('tag-input').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); addPendingTag(); } });
 
 document.getElementById('note-media').onchange = (e) => {
     const file = e.target.files[0];
     if (file) document.getElementById('file-name').textContent = file.name;
 };
 
-function switchView(view) {
-    currentView = view;
-    if (view === 'notes') {
-        document.getElementById('tab-notes').classList.add('active');
-        document.getElementById('tab-trash').classList.remove('active');
-        document.getElementById('tab-settings').classList.remove('active');
-        document.getElementById('editor-card').style.display = 'block';
-        document.querySelector('.date-filter').style.display = 'flex';
-    } else if (view === 'trash') {
-        document.getElementById('tab-notes').classList.remove('active');
-        document.getElementById('tab-trash').classList.add('active');
-        document.getElementById('tab-settings').classList.remove('active');
-        document.getElementById('editor-card').style.display = 'none';
-        document.querySelector('.date-filter').style.display = 'none';
-    } else if (view === 'settings') {
-        document.getElementById('tab-notes').classList.remove('active');
-        document.getElementById('tab-trash').classList.remove('active');
-        document.getElementById('tab-settings').classList.add('active');
-        document.getElementById('editor-card').style.display = 'none';
-        document.querySelector('.date-filter').style.display = 'none';
-        openSettings();
-        return;
-    }
-    renderNotes();
-}
-document.getElementById('tab-notes').onclick = () => switchView('notes');
-document.getElementById('tab-trash').onclick = () => switchView('trash');
-document.getElementById('tab-settings').onclick = () => switchView('settings');
-
-// 日期过滤
-document.getElementById('filter-date').onchange = (e) => { selectedDate = e.target.value; renderNotes(); };
-document.getElementById('clear-date').onclick = () => { document.getElementById('filter-date').value = ''; selectedDate = ''; renderNotes(); };
-document.getElementById('sidebar-date-picker').onchange = (e) => {
-    selectedDate = e.target.value;
-    document.getElementById('filter-date').value = selectedDate;
-    renderNotes();
-    closeSidebar();
-};
-
-/* ================= 6. 数据加载与渲染 ================= */
-async function loadNotes() {
-    const { data, error } = await supabaseClient.from('notes').select('*').order('created_at', { ascending: false });
-    if (error) { console.error(error); return; }
-    notes = data || [];
-    renderSidebarTags();
-    renderNotes();
-}
-
-function renderSidebarTags() {
-    const list = document.getElementById('tag-list');
-    const allTags = new Set();
-    notes.forEach(n => { if (n.tags && !n.deleted) n.tags.split(',').forEach(t => allTags.add(t.trim())); });
-
-    let html = `<li class="tag-item ${currentTag === 'all' ? 'active' : ''}" data-tag="all"><span>📚 全部记录</span></li>`;
-    allTags.forEach(tag => {
-        html += `<li class="tag-item ${currentTag === tag ? 'active' : ''}" data-tag="${tag}"><span>🏷️ ${escapeHTML(tag)}</span></li>`;
-    });
-    list.innerHTML = html;
-
-    document.querySelectorAll('.tag-item').forEach(item => {
-        item.onclick = () => { currentTag = item.dataset.tag; renderSidebarTags(); renderNotes(); closeSidebar(); };
-    });
-}
-
-function renderNotes() {
-    const list = document.getElementById('note-list');
-    let filtered = notes.filter(n => n.deleted === (currentView === 'trash'));
-    if (selectedDate) filtered = filtered.filter(n => n.date === selectedDate);
-    if (currentTag !== 'all') filtered = filtered.filter(n => n.tags && n.tags.split(',').map(t => t.trim()).includes(currentTag));
-
-    if (filtered.length === 0) {
-        list.innerHTML = `<div class="empty-tip">${currentView === 'notes' ? '这里空空的，写点什么吧 ♡' : '垃圾桶是空的 🗑️'}</div>`;
-        return;
-    }
-
-    list.innerHTML = filtered.map(n => {
-        let mediaHtml = '';
-        if (n.media_url) {
-            if (n.media_type === 'image') mediaHtml = `<img src="${n.media_url}" class="note-media" />`;
-            else if (n.media_type === 'video') mediaHtml = `<video src="${n.media_url}" controls class="note-media"></video>`;
-            else mediaHtml = `<a href="${n.media_url}" target="_blank" class="note-link">📎 查看附件：${escapeHTML(n.media_url.split('/').pop())}</a>`;
-        }
-        let linkHtml = n.link_url ? `<a href="${n.link_url}" target="_blank" class="note-link">🔗 ${escapeHTML(n.link_url)}</a>` : '';
-
-        return `
-            <div class="note-card">
-                <div class="note-date">
-                    <span>📅 ${n.date}</span>
-                    <span>${new Date(n.created_at).toLocaleTimeString('zh-CN', {hour: '2-digit', minute:'2-digit'})}</span>
-                </div>
-                <div class="note-tags">
-                    ${n.tags ? n.tags.split(',').map(t => `<span class="note-tag">#${escapeHTML(t.trim())}</span>`).join('') : ''}
-                </div>
-                <div class="note-content">${escapeHTML(n.content)}</div>
-                ${mediaHtml}
-                ${linkHtml}
-                <div class="note-actions">
-                    ${currentView === 'notes'
-                        ? `<button class="btn-danger" onclick="moveToTrash('${n.id}')">移入垃圾桶</button>`
-                        : `<button onclick="restoreNote('${n.id}')">恢复</button>
-                           <button class="btn-danger" onclick="deletePermanently('${n.id}')">彻底删除</button>`
-                    }
-                </div>
-            </div>
-        `;
-    }).join("");
-}
-
-function escapeHTML(text) { return String(text || "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
-
-/* ================= 7. 保存与删除逻辑 ================= */
 document.getElementById('save-btn').onclick = async function() {
     const content = document.getElementById('note-content').value.trim();
     const link = document.getElementById('note-link').value.trim();
@@ -917,8 +720,8 @@ document.getElementById('save-btn').onclick = async function() {
     if (!content && !file && !link) return alert("写点什么或者加个文件吧 ♡");
 
     this.disabled = true; this.textContent = "保存中...";
-
     let mediaUrl = null, mediaType = null;
+
     if (file) {
         const fileExt = file.name.split('.').pop();
         const fileName = `${Date.now()}.${fileExt}`;
@@ -954,12 +757,263 @@ document.getElementById('save-btn').onclick = async function() {
     this.disabled = false; this.textContent = "记录一下 ♡";
 };
 
+async function loadNotes() {
+    const { data, error } = await supabaseClient.from('notes').select('*').order('created_at', { ascending: false });
+    if (error) { console.error(error); return; }
+    notes = data || [];
+    renderSidebarTags();
+    renderNotes();
+}
+
+function renderSidebarTags() {
+    const list = document.getElementById('tag-list');
+    const allTags = new Set();
+    notes.forEach(n => { if (n.tags && !n.deleted) n.tags.split(',').forEach(t => allTags.add(t.trim())); });
+    let html = `<li class="tag-item ${currentTag === 'all' ? 'active' : ''}" data-tag="all"><span>📚 全部记录</span></li>`;
+    allTags.forEach(tag => {
+        html += `<li class="tag-item ${currentTag === tag ? 'active' : ''}" data-tag="${tag}"><span>🏷️ ${escapeHTML(tag)}</span></li>`;
+    });
+    list.innerHTML = html;
+    document.querySelectorAll('.tag-item').forEach(item => {
+        item.onclick = () => { currentTag = item.dataset.tag; renderSidebarTags(); renderNotes(); closeSidebar(); };
+    });
+}
+
+function renderNotes() {
+    const list = document.getElementById('note-list');
+    if (!list) return;
+    let filtered = notes.filter(n => !n.deleted);
+    if (selectedDate) filtered = filtered.filter(n => n.date === selectedDate);
+    if (currentTag !== 'all') filtered = filtered.filter(n => n.tags && n.tags.split(',').map(t => t.trim()).includes(currentTag));
+
+    if (filtered.length === 0) {
+        list.innerHTML = `<div class="empty-tip">这里空空的，写点什么吧 ♡</div>`;
+        return;
+    }
+    list.innerHTML = filtered.map(n => renderNoteCard(n, false)).join("");
+}
+
+function renderTrash() {
+    const list = document.getElementById('trash-list');
+    if (!list) return;
+    let filtered = notes.filter(n => n.deleted);
+    if (filtered.length === 0) {
+        list.innerHTML = `<div class="empty-tip">垃圾桶是空的 🗑️</div>`;
+        return;
+    }
+    list.innerHTML = filtered.map(n => renderNoteCard(n, true)).join("");
+}
+
+function renderNoteCard(n, isTrash) {
+    let mediaHtml = '';
+    if (n.media_url) {
+        if (n.media_type === 'image') mediaHtml = `<img src="${n.media_url}" class="note-media" />`;
+        else if (n.media_type === 'video') mediaHtml = `<video src="${n.media_url}" controls class="note-media"></video>`;
+        else mediaHtml = `<a href="${n.media_url}" target="_blank" class="note-link">📎 查看附件：${escapeHTML(n.media_url.split('/').pop())}</a>`;
+    }
+    let linkHtml = n.link_url ? `<a href="${n.link_url}" target="_blank" class="note-link">🔗 ${escapeHTML(n.link_url)}</a>` : '';
+    return `
+        <div class="note-card">
+            <div class="note-date">
+                <span>📅 ${n.date}</span>
+                <span>${new Date(n.created_at).toLocaleTimeString('zh-CN', {hour: '2-digit', minute:'2-digit'})}</span>
+            </div>
+            <div class="note-tags">
+                ${n.tags ? n.tags.split(',').map(t => `<span class="note-tag">#${escapeHTML(t.trim())}</span>`).join('') : ''}
+            </div>
+            <div class="note-content">${escapeHTML(n.content)}</div>
+            ${mediaHtml}
+            ${linkHtml}
+            <div class="note-actions">
+                ${!isTrash
+                    ? `<button class="btn-danger" onclick="moveToTrash('${n.id}')">移入垃圾桶</button>`
+                    : `<button onclick="restoreNote('${n.id}')">恢复</button>
+                       <button class="btn-danger" onclick="deletePermanently('${n.id}')">彻底删除</button>`
+                }
+            </div>
+        </div>
+    `;
+}
+
+function escapeHTML(text) { return String(text || "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 async function moveToTrash(id) { if (!confirm("移入垃圾桶？")) return; await supabaseClient.from('notes').update({ deleted: true }).eq('id', id); await loadNotes(); }
 async function restoreNote(id) { await supabaseClient.from('notes').update({ deleted: false }).eq('id', id); await loadNotes(); }
 async function deletePermanently(id) { if (!confirm("彻底删除？不可恢复！")) return; await supabaseClient.from('notes').delete().eq('id', id); await loadNotes(); }
 
-/* ================= 初始化 ================= */
+// 日期过滤
+document.getElementById('filter-date').onchange = (e) => { selectedDate = e.target.value; renderNotes(); };
+document.getElementById('clear-date').onclick = () => { document.getElementById('filter-date').value = ''; selectedDate = ''; renderNotes(); };
+document.getElementById('sidebar-date-picker').onchange = (e) => {
+    selectedDate = e.target.value;
+    document.getElementById('filter-date').value = selectedDate;
+    renderNotes(); closeSidebar();
+};
+
+/* ================= 7. AI 聊天逻辑 ================= */
+function getAIConfig() {
+    return JSON.parse(localStorage.getItem('aiChatConfig')) || {
+        name: 'AI 伙伴', avatar: '', personality: '你是一个温柔、善解人意的聊天伙伴。',
+        url: '', key: '', model: 'deepseek-chat'
+    };
+}
+
+function renderChatHistory() {
+    const container = document.getElementById('chat-messages');
+    const config = getAIConfig();
+    document.getElementById('chat-ai-name').textContent = config.name;
+    
+    let html = `<div class="message-row ai">
+        <div class="message-avatar" id="chat-ai-avatar-display">${config.avatar ? `<img src="${config.avatar}">` : '🤖'}</div>
+        <div class="message-bubble">你好，我是${config.name}，今天想聊点什么？</div>
+    </div>`;
+    
+    chatHistory.forEach(msg => {
+        if (msg.role === 'user') {
+            html += `<div class="message-row user">
+                <div class="message-avatar">👤</div>
+                <div class="message-bubble">${escapeHTML(msg.content)}</div>
+            </div>`;
+        } else {
+            html += `<div class="message-row ai">
+                <div class="message-avatar">${config.avatar ? `<img src="${config.avatar}">` : '🤖'}</div>
+                <div class="message-bubble">${escapeHTML(msg.content)}</div>
+            </div>`;
+        }
+    });
+    container.innerHTML = html;
+    container.scrollTop = container.scrollHeight;
+}
+
+async function sendChatMessage() {
+    const input = document.getElementById('chat-input');
+    const text = input.value.trim();
+    if (!text) return;
+    
+    const config = getAIConfig();
+    if (!config.url || !config.key) {
+        alert("请先在设置中配置 AI 的 API 地址和 Key！");
+        return;
+    }
+
+    // 添加用户消息
+    chatHistory.push({ role: 'user', content: text });
+    localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
+    input.value = '';
+    renderChatHistory();
+    
+    document.getElementById('chat-send-btn').disabled = true;
+    document.getElementById('chat-send-btn').textContent = '...';
+
+    try {
+        const messages = [
+            { role: "system", content: config.personality },
+            ...chatHistory.slice(-10) // 保留最近10条上下文
+        ];
+        
+        const response = await fetch(config.url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${config.key}` },
+            body: JSON.stringify({
+                model: config.model || 'deepseek-chat',
+                messages: messages
+            })
+        });
+        
+        const data = await response.json();
+        if (data.error) throw new Error(data.error.message);
+        
+        const aiMsg = data.choices[0].message.content;
+        chatHistory.push({ role: 'assistant', content: aiMsg });
+        localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
+        renderChatHistory();
+    } catch (err) {
+        alert("AI 回复失败：" + err.message);
+    } finally {
+        document.getElementById('chat-send-btn').disabled = false;
+        document.getElementById('chat-send-btn').textContent = '↑';
+    }
+}
+
+function clearChatHistory() {
+    if (!confirm("确定清空聊天记录吗？")) return;
+    chatHistory = [];
+    localStorage.removeItem('chatHistory');
+    renderChatHistory();
+}
+
+/* ================= 8. 设置逻辑 ================= */
+function openSettings() { 
+    document.getElementById('settings-modal').classList.add('open'); 
+    const config = getAIConfig();
+    document.getElementById('ai-name-input').value = config.name;
+    document.getElementById('ai-personality-input').value = config.personality;
+    document.getElementById('ai-api-url').value = config.url;
+    document.getElementById('ai-api-key').value = config.key;
+    document.getElementById('ai-model-input').value = config.model;
+}
+function closeSettings() { document.getElementById('settings-modal').classList.remove('open'); }
+
+document.getElementById('bg-upload').onchange = (e) => {
+    const file = e.target.files[0]; if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+        localStorage.setItem('customBg', ev.target.result);
+        document.body.style.backgroundImage = `url('${ev.target.result}')`;
+        alert("背景已保存到本地！");
+    };
+    reader.readAsDataURL(file);
+};
+
+function saveBgFromUrl() {
+    const url = document.getElementById('bg-url-input').value.trim();
+    if (url) { localStorage.setItem('customBg', url); document.body.style.backgroundImage = `url('${url}')`; alert("背景已保存！"); closeSettings(); }
+    else { alert("请输入图片链接"); }
+}
+
+function resetBackground() {
+    localStorage.removeItem('customBg');
+    document.body.style.backgroundImage = '';
+    alert("已恢复为系统默认背景！");
+    closeSettings();
+}
+
+// AI 设置
+document.getElementById('ai-avatar-upload').onchange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+            localStorage.setItem('aiAvatar', ev.target.result);
+            alert("AI 头像已临时保存，请点击保存 AI 设置");
+        };
+        reader.readAsDataURL(file);
+    }
+};
+
+function saveAISettings() {
+    const name = document.getElementById('ai-name-input').value.trim();
+    const personality = document.getElementById('ai-personality-input').value.trim();
+    const url = document.getElementById('ai-api-url').value.trim();
+    const key = document.getElementById('ai-api-key').value.trim();
+    const model = document.getElementById('ai-model-input').value.trim();
+    const avatar = localStorage.getItem('aiAvatar') || '';
+
+    if (!url || !key) { alert("请填写 API 地址和 Key"); return; }
+
+    const config = { name, personality, url, key, model, avatar };
+    localStorage.setItem('aiChatConfig', JSON.stringify(config));
+    alert("AI 设置已保存！");
+    closeSettings();
+    renderChatHistory();
+}
+
+// 页面加载时检查背景
+const savedBg = localStorage.getItem('customBg');
+if (savedBg) document.body.style.backgroundImage = `url('${savedBg}')`;
+
+// 初始化
 loadNotes();
+
 </script>
 </body>
 </html>
