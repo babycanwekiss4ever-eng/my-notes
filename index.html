@@ -4,226 +4,410 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>灵感实验室🪷</title>
-<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
 <style>
+    /* ================= 全局变量与基础 ================= */
     :root {
-        --bg: #fdfbf7; --card-bg: rgba(255,255,255,0.8); --text-main: #333333;
-        --text-sub: #888888; --accent: #fbc531; --danger: #ff6b6b;
-        --border: #e8e8e8; --window-border: #a0c4e8;
+        /* 核心：黑体字 */
+        --font-main: "SimHei", "Heiti SC", "Microsoft YaHei", "PingFang SC", sans-serif;
+
+        /* ⚠️ 请把你图床链接（Supabase 的 public 前缀）统一替换下面的 "你的图床链接" ⚠️ */
+        
+        /* 背景图链接 */
+        --bg-day: url('你的图床链接/bg-day-pc.png');
+        --bg-night: url('你的图床链接/bg-night-pc.png');
+        --bg-day-mobile: url('你的图床链接/bg-day-mobile.png');
+        --bg-night-mobile: url('你的图床链接/bg-night-mobile.png');
+        
+        /* 装饰图片链接 */
+        --deco-img: url('你的图床链接/deco.png');
+        --title-bg-img: url('你的图床链接/title-bg.png');
+        --avatar-default: url('你的图床链接/avatar-default.png');
+        --trash-bg: url('你的图床链接/trash-bg.png');
+
+        /* 卡片图片链接 */
+        --card-text-short: url('你的图床链接/card-text-short.png');
+        --card-text-long: url('你的图床链接/card-text-long.png');
+        --card-text-big: url('你的图床链接/card-text-big.png');
+        --card-img-1: url('你的图床链接/card-img-1.png');
+        --card-img-3: url('你的图床链接/card-img-3.png');
+        --card-img-6: url('你的图床链接/card-img-6.png');
+        --card-img-only: url('你的图床链接/card-img-only.png');
+
+        /* 按钮图片链接 */
+        --btn-blank: url('你的图床链接/btn-blank.png');
+        --btn-blue: url('你的图床链接/btn-blue.png');
+        --btn-grey: url('你的图床链接/btn-grey.png');
+        --btn-no: url('你的图床链接/btn-no.png');
+        --btn-pink: url('你的图床链接/btn-pink.png');
+        --btn-yes: url('你的图床链接/btn-yes.png');
+
+        --text-main: #333;
+        --text-sub: #666;
+        --accent: #f8c8d4;
+        --border-radius: 16px;
     }
+    
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    
     body { 
         margin: 0; 
-        font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", sans-serif; 
-        background: var(--bg); 
+        font-family: var(--font-main); /* 应用黑体 */
+        background-color: #fdfbf7;
+        background-image: var(--bg-day);
         background-size: cover; 
         background-position: center; 
         background-attachment: fixed;
         color: var(--text-main); 
         padding-bottom: 80px; 
         overflow-x: hidden; 
-        transition: margin-left 0.3s ease; 
+        transition: background-image 0.4s ease, margin-left 0.3s ease; 
+        line-height: 1.6;
     }
-    /* 背景遮罩，确保文字可读 */
     body::before {
         content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(255,255,255,0.4); z-index: -1; pointer-events: none;
+        background: rgba(255,255,255,0.3); z-index: -1; pointer-events: none;
     }
 
-    /* ========== 侧边栏 ========== */
+    /* 深色模式切换 */
+    @media (prefers-color-scheme: dark) {
+        body { background-image: var(--bg-night); }
+        body::before { background: rgba(0,0,0,0.4); }
+    }
+    @media (max-width: 768px) {
+        body { background-image: var(--bg-day-mobile); }
+        @media (prefers-color-scheme: dark) {
+            body { background-image: var(--bg-night-mobile); }
+        }
+    }
+
+    /* ================= 侧边栏 ================= */
     .sidebar {
-        position: fixed; top: 0; left: 0; width: 270px; height: 100vh;
-        background: rgba(255,255,255,0.95); backdrop-filter: blur(10px);
-        border-right: 2px solid var(--window-border);
-        padding: 20px; overflow-y: auto; z-index: 2000;
-        transform: translateX(-100%); transition: transform 0.3s ease;
-        box-shadow: 4px 0 15px rgba(0,0,0,0.1);
+        position: fixed; top: 0; left: 0; width: 280px; height: 100vh;
+        background: rgba(255, 255, 255, 0.85); 
+        backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+        border-right: 1px solid rgba(255,255,255,0.5);
+        padding: 30px 20px; overflow-y: auto; z-index: 2000;
+        transform: translateX(-100%); transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        box-shadow: 4px 0 30px rgba(0,0,0,0.05);
     }
     .sidebar.open { transform: translateX(0); }
     .sidebar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-    .sidebar h2 { font-size: 18px; margin: 0; color: #4a6fa5; }
-    .close-sidebar { background: none; border: none; font-size: 24px; cursor: pointer; color: #888; }
+    .sidebar h2 { font-size: 18px; margin: 0; font-weight: 600; color: #555; }
+    .close-sidebar { background: none; border: none; font-size: 24px; cursor: pointer; color: #999; }
     
+    /* 头像 */
+    .avatar-wrapper { text-align: center; margin-bottom: 20px; }
+    .avatar {
+        width: 80px; height: 80px; border-radius: 50%; 
+        background: #fff; border: 2px solid #f8c8d4;
+        margin: 0 auto; display: block; object-fit: cover;
+        cursor: pointer;
+    }
+    .avatar-upload { display: none; }
+
+    /* 标签索引 */
     .tag-list { list-style: none; padding: 0; margin: 0; }
     .tag-list li {
-        padding: 10px 12px; border-radius: 8px; cursor: pointer; margin-bottom: 5px;
-        font-size: 15px; color: var(--text-main); transition: 0.2s;
-        border: 1px solid transparent;
+        padding: 12px 15px; border-radius: 12px; cursor: pointer; margin-bottom: 8px;
+        font-size: 14px; color: #555; transition: all 0.3s ease;
+        background-image: var(--btn-blank); /* 使用空白按钮作为底 */
+        background-size: 100% 100%; background-repeat: no-repeat;
+        border: none;
     }
-    .tag-list li:hover { background: #f0f0f0; }
-    .tag-list li.active { background: #e8f0fe; color: #4a6fa5; font-weight: bold; border-color: #a0c4e8; }
+    .tag-list li:hover { background-image: var(--btn-pink); color: #fff; transform: translateX(4px); }
+    .tag-list li.active { background-image: var(--btn-pink); color: #fff; font-weight: 500; }
+
+    /* 日期索引 */
+    .date-index-section { margin-top: 20px; }
+    .date-index-section h3 { font-size: 14px; color: #888; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
+    .date-picker-input {
+        width: 100%; padding: 10px; border: 1px solid #f8c8d4; border-radius: 12px;
+        font-family: inherit; font-size: 14px; outline: none; background: #fff;
+    }
 
     /* 遮罩层 */
     .overlay {
         position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(0,0,0,0.2); z-index: 1500; display: none;
+        background: rgba(0,0,0,0.2); backdrop-filter: blur(4px); z-index: 1500; 
+        display: none; opacity: 0; transition: opacity 0.3s;
     }
-    .overlay.open { display: block; }
+    .overlay.open { display: block; opacity: 1; }
 
-    /* ========== 顶部 ========== */
-    .top-header { padding: 20px 20px 10px; display: flex; justify-content: space-between; align-items: center; }
-    .menu-btn { background: rgba(255,255,255,0.8); border: 2px solid var(--window-border); border-radius: 8px; font-size: 20px; cursor: pointer; padding: 5px 12px; color: #4a6fa5; }
+    /* ================= 顶部 ================= */
+    .top-header { 
+        padding: 30px 30px 20px; 
+        display: flex; justify-content: space-between; align-items: flex-start; 
+        position: relative; 
+    }
+    .menu-btn { 
+        background: none; border: none; cursor: pointer; 
+        background-image: var(--btn-grey); background-size: 100% 100%; 
+        width: 45px; height: 45px;
+        text-indent: -9999px; color: transparent; /* 使用灰色按钮 */
+    }
+    
+    /* 标题 */
+    .title-wrapper { 
+        text-align: right; 
+        background-image: var(--title-bg-img); 
+        background-size: cover; 
+        background-position: center;
+        padding: 15px 25px; 
+        border-radius: var(--border-radius); 
+        position: relative;
+        min-width: 200px;
+    }
+    .title-wrapper::before { 
+        content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+        background: rgba(255,255,255,0.6); border-radius: var(--border-radius); 
+    }
     .header-title {
-        font-family: 'Dancing Script', 'Brush Script MT', cursive, sans-serif;
-        font-size: 32px; color: #4a6fa5; margin: 0; text-shadow: 2px 2px 0 #fff;
+        font-size: 28px; color: #333; margin: 0; font-weight: 500;
+        letter-spacing: 2px; position: relative; z-index: 2; font-family: var(--font-main);
     }
-    .date-display { font-size: 12px; color: #666; margin: 5px 0 0; text-shadow: 0 0 5px #fff; }
+    .date-display { font-size: 12px; color: #666; margin: 5px 0 0; position: relative; z-index: 2; letter-spacing: 1px; }
 
-    /* ========== 切换栏（顶部导航条） ========== */
-    .nav-tabs {
-        display: flex; gap: 8px; padding: 0 15px 10px; flex-wrap: wrap;
+    /* 顶部装饰 */
+    .deco-img {
+        display: block; width: 100%; height: 15px;
+        background-image: var(--deco-img); background-size: contain; background-repeat: repeat-x;
+        margin: 10px 0; position: relative; z-index: 2;
     }
+
+    /* ================= 切换栏 ================= */
+    .nav-tabs { display: flex; gap: 10px; padding: 0 30px 20px; flex-wrap: wrap; position: relative; z-index: 2; }
     .nav-tab {
-        flex: 1; text-align: center; padding: 8px 10px; font-size: 13px;
-        background: rgba(255,255,255,0.7); border: 2px solid var(--window-border);
-        border-radius: 8px; cursor: pointer; color: #4a6fa5; font-weight: bold;
-        transition: 0.2s; min-width: 70px;
+        flex: 1; text-align: center; padding: 12px 10px; font-size: 14px;
+        background: none; border: none; cursor: pointer; color: #555;
+        background-image: var(--btn-blank); background-size: 100% 100%; 
+        background-repeat: no-repeat; transition: all 0.3s ease;
     }
-    .nav-tab.active { background: #4a6fa5; color: #fff; border-color: #4a6fa5; }
+    .nav-tab:hover { background-image: var(--btn-pink); color: #fff; }
+    .nav-tab.active { background-image: var(--btn-pink); color: #fff; font-weight: bold; }
 
-    /* ========== 窗口卡片（半透明窗口风格） ========== */
+    /* ================= 窗口卡片 ================= */
     .window-card {
-        background: var(--card-bg); backdrop-filter: blur(8px);
-        margin: 0 15px 15px; padding: 0; border-radius: 0;
-        box-shadow: 4px 4px 0 rgba(0,0,0,0.1);
-        border: 2px solid var(--window-border); position: relative;
+        background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(15px);
+        margin: 0 30px 20px; padding: 0; border-radius: var(--border-radius);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+        border: 1px solid rgba(255,255,255,0.8); position: relative; overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        z-index: 2;
     }
+    .window-card:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(0,0,0,0.06); }
     .window-title-bar {
-        background: #e8f0fe; border-bottom: 2px solid var(--window-border);
-        padding: 6px 12px; font-size: 13px; font-weight: bold; color: #4a6fa5;
+        padding: 12px 20px; font-size: 12px; color: #888; 
+        border-bottom: 1px solid rgba(0,0,0,0.05);
         display: flex; justify-content: space-between; align-items: center;
     }
-    .window-title-bar .dots { display: flex; gap: 4px; }
-    .window-title-bar .dots span { width: 10px; height: 10px; border-radius: 50%; border: 1px solid #4a6fa5; }
-    .window-body { padding: 15px; }
+    .window-title-bar .dots { display: flex; gap: 6px; }
+    .window-title-bar .dots span { width: 8px; height: 8px; border-radius: 50%; background: #f8c8d4; }
+    .window-body { padding: 20px; }
 
     /* 编辑器内部 */
-    .editor-card textarea { width: 100%; border: 1px solid var(--border); border-radius: 6px; resize: none; font-size: 15px; font-family: inherit; outline: none; min-height: 80px; color: #333; padding: 10px; background: rgba(255,255,255,0.7); }
-    .input-row { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
-    .input-row input[type="text"] { flex: 1; border: 1px solid var(--border); border-radius: 6px; padding: 8px 10px; font-size: 13px; outline: none; background: rgba(255,255,255,0.7); width: 100%; }
-    .input-row input[type="file"] { font-size: 12px; width: 100%; }
+    .editor-card textarea { 
+        width: 100%; border: none; resize: none; font-size: 15px; 
+        font-family: var(--font-main); /* 输入框黑体 */
+        outline: none; min-height: 80px; color: #333; 
+        padding: 10px; background: rgba(255,255,255,0.5); border-radius: 10px;
+    }
+    .input-row { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap; align-items: center; }
+    .input-row input[type="text"] { 
+        flex: 1; border: 1px solid #eee; border-radius: 10px; padding: 10px; 
+        font-size: 13px; outline: none; background: rgba(255,255,255,0.7); width: 100%;
+        font-family: var(--font-main);
+    }
+    .input-row input[type="file"] { font-size: 12px; width: 100%; color: #888; }
+    .tag-input-row { display: flex; gap: 10px; margin-top: 15px; }
+    .tag-input-row input { 
+        flex: 1; border: 1px solid #eee; border-radius: 10px; padding: 10px; 
+        font-size: 13px; outline: none; background: rgba(255,255,255,0.7);
+        font-family: var(--font-main);
+    }
+    .tag-input-row button { 
+        background: none; color: transparent; border: none; 
+        background-image: var(--btn-blue); background-size: 100% 100%; 
+        text-indent: -9999px; width: 80px; height: 40px; cursor: pointer; /* 使用蓝色按钮 */
+    }
+    .selected-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+    .selected-tag { 
+        background: rgba(248, 200, 212, 0.2); padding: 4px 12px; border-radius: 20px; 
+        font-size: 12px; color: #d98a9a; display: flex; align-items: center; gap: 6px; 
+    }
+    .selected-tag button { background: none; border: none; color: #d98a9a; cursor: pointer; font-size: 14px; }
+    
+    .editor-actions { display: flex; justify-content: flex-end; margin-top: 20px; }
+    .btn { 
+        border: none; padding: 0; cursor: pointer; transition: 0.3s; 
+        background: none; background-image: var(--btn-pink); background-size: 100% 100%; 
+        text-indent: -9999px; color: transparent; width: 120px; height: 40px;
+    }
+    .btn:hover { opacity: 0.8; }
+    .btn:disabled { opacity: 0.4; }
 
-    .tag-input-row { display: flex; gap: 8px; margin-top: 10px; }
-    .tag-input-row input { flex: 1; border: 1px solid var(--border); border-radius: 6px; padding: 8px 10px; font-size: 13px; outline: none; background: rgba(255,255,255,0.7); }
-    .tag-input-row button { background: var(--accent); color: #fff; border: none; border-radius: 6px; padding: 8px 14px; font-size: 13px; cursor: pointer; }
+    /* 日期过滤器 */
+    .date-filter { padding: 0 30px 20px; display: flex; align-items: center; gap: 15px; flex-wrap: wrap; z-index: 2; position: relative; }
+    .date-filter input[type="date"] { 
+        border: 1px solid #f8c8d4; border-radius: 12px; padding: 8px 15px; 
+        font-size: 13px; font-family: inherit; background: rgba(255,255,255,0.8); outline: none; 
+        font-family: var(--font-main);
+    }
+    .date-filter button { 
+        background: none; border: none; font-size: 13px; color: #d98a9a; font-weight: bold; cursor: pointer; 
+    }
 
-    .selected-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
-    .selected-tag { background: #e8f0fe; padding: 3px 10px; border-radius: 12px; font-size: 12px; color: #4a6fa5; display: flex; align-items: center; gap: 5px; border: 1px solid #a0c4e8; }
-    .selected-tag button { background: none; border: none; color: #999; cursor: pointer; font-size: 14px; }
-
-    .editor-actions { display: flex; justify-content: flex-end; margin-top: 12px; }
-    .btn { border: none; padding: 8px 16px; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; transition: 0.2s; background: #4a6fa5; color: #fff; }
-    .btn:disabled { opacity: 0.5; }
-    .btn-yellow { background: var(--accent); }
-
-    /* 日期与过滤 */
-    .date-filter { padding: 0 15px 10px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-    .date-filter input[type="date"] { border: 1px solid var(--border); border-radius: 6px; padding: 6px 8px; font-size: 13px; font-family: inherit; background: rgba(255,255,255,0.8); outline: none; color: #333; }
-    .date-filter button { background: none; border: none; font-size: 13px; color: #4a6fa5; font-weight: bold; cursor: pointer; text-decoration: underline; }
-
-    /* ========== 笔记列表（窗口卡片） ========== */
-    .note-list { padding: 0 15px; display: flex; flex-direction: column; gap: 12px; }
+    /* ================= 笔记列表（卡片匹配逻辑） ================= */
+    .note-list { padding: 0 30px; display: flex; flex-direction: column; gap: 20px; position: relative; z-index: 2; }
+    
     .note-card {
-        background: rgba(255,255,255,0.85); backdrop-filter: blur(5px);
-        border: 2px solid var(--window-border); border-radius: 0;
-        box-shadow: 3px 3px 0 rgba(0,0,0,0.1);
-        position: relative;
+        background-color: rgba(255,255,255,0.7); backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.8); border-radius: var(--border-radius);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        position: relative; overflow: hidden; transition: transform 0.3s;
+        background-size: cover; background-position: center;
     }
+    .note-card:hover { transform: translateY(-2px); }
+    
+    .card-text-short { background-image: var(--card-text-short); }
+    .card-text-long { background-image: var(--card-text-long); }
+    .card-text-big { background-image: var(--card-text-big); }
+    .card-img-1 { background-image: var(--card-img-1); }
+    .card-img-3 { background-image: var(--card-img-3); }
+    .card-img-6 { background-image: var(--card-img-6); }
+    .card-img-only { background-image: var(--card-img-only); }
+
     .note-card .note-title-bar {
-        background: #e8f0fe; border-bottom: 2px solid var(--window-border);
-        padding: 5px 10px; font-size: 12px; font-weight: bold; color: #4a6fa5;
+        padding: 12px 20px; font-size: 11px; color: #999; 
         display: flex; justify-content: space-between; align-items: center;
+        border-bottom: 1px dashed rgba(0,0,0,0.05);
     }
-    .note-card .note-body { padding: 12px; }
-    .note-date { font-size: 11px; color: var(--text-sub); margin-bottom: 6px; display: flex; justify-content: space-between; }
-    .note-tags { display: flex; gap: 6px; margin-bottom: 8px; flex-wrap: wrap; }
-    .note-tag { background: #e8f0fe; padding: 2px 8px; border-radius: 10px; font-size: 11px; color: #4a6fa5; border: 1px solid #a0c4e8; }
-    .note-content { font-size: 15px; line-height: 1.6; white-space: pre-wrap; margin-bottom: 8px; }
-    .note-media { max-width: 100%; border-radius: 6px; margin-top: 8px; border: 1px solid var(--border); }
-    .note-link { display: inline-block; margin-top: 8px; font-size: 13px; color: #4a6fa5; text-decoration: underline; word-break: break-all; }
-    .note-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px; padding-top: 10px; border-top: 1px dashed #ccc; }
-    .note-actions button { font-size: 12px; padding: 4px 10px; border-radius: 4px; border: none; cursor: pointer; }
-    .btn-danger { background: #ffe0e0; color: var(--danger); }
-    .btn-restore { background: #e0f0ff; color: #3b82f6; }
+    .note-card .note-body { padding: 15px 20px; }
+    .note-date { font-size: 11px; color: #aaa; margin-bottom: 10px; display: flex; justify-content: space-between; }
+    .note-tags { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
+    .note-tag { background: rgba(248, 200, 212, 0.2); padding: 2px 8px; border-radius: 10px; font-size: 11px; color: #d98a9a; }
+    .note-content { font-size: 15px; line-height: 1.7; white-space: pre-wrap; margin-bottom: 12px; color: #333; font-family: var(--font-main); }
+    .note-media { max-width: 100%; border-radius: 10px; margin-top: 10px; border: 1px solid rgba(0,0,0,0.05); }
+    .note-link { display: inline-block; margin-top: 10px; font-size: 13px; color: #d98a9a; text-decoration: underline; word-break: break-all; }
+    .note-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 15px; padding-top: 15px; border-top: 1px dashed rgba(0,0,0,0.05); }
+    .note-actions button { font-size: 12px; padding: 0; border: none; cursor: pointer; transition: 0.3s; background: none; background-size: 100% 100%; text-indent: -9999px; color: transparent; }
+    .btn-danger { background-image: var(--btn-no); width: 60px; height: 30px; } /* NO 按钮 */
+    .btn-restore { background-image: var(--btn-yes); width: 60px; height: 30px; } /* YES 按钮 */
+    .btn-danger:hover, .btn-restore:hover { opacity: 0.8; }
 
-    /* ========== 底部导航栏 ========== */
-    .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); border-top: 2px solid var(--window-border); display: flex; justify-content: space-around; padding: 8px 0 15px; z-index: 1000; }
-    .nav-item { text-align: center; font-size: 11px; color: #888; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; width: 33%; }
-    .nav-item.active { color: #4a6fa5; font-weight: bold; }
+    /* ================= 垃圾桶 ================= */
+    .trash-container {
+        background-image: var(--trash-bg); background-size: cover; background-position: center;
+        margin: 20px 30px; border-radius: 30px; padding: 30px 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        border: 2px solid #f8c8d4;
+    }
+
+    /* ================= 底部导航栏 ================= */
+    .bottom-nav { 
+        position: fixed; bottom: 0; left: 0; width: 100%; 
+        background: rgba(255,255,255,0.85); backdrop-filter: blur(15px); 
+        border-top: 1px solid rgba(255,255,255,0.8); 
+        display: flex; justify-content: space-around; padding: 10px 0 20px; z-index: 1000; 
+    }
+    .nav-item { 
+        text-align: center; font-size: 11px; color: #999; 
+        cursor: pointer; display: flex; flex-direction: column; align-items: center; 
+        gap: 4px; width: 33%; transition: 0.3s;
+    }
+    .nav-item.active { color: #d98a9a; font-weight: 600; }
+    .nav-item:hover { color: #d98a9a; }
     .nav-icon { font-size: 20px; }
-    .empty-tip { text-align: center; color: #888; padding: 40px 20px; font-size: 14px; }
+    .empty-tip { text-align: center; color: #aaa; padding: 40px 20px; font-size: 14px; }
 
-    /* ========== 设置弹窗 ========== */
+    /* ================= 设置弹窗 ================= */
     .settings-modal {
         position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(0,0,0,0.4); z-index: 3000; display: none;
-        justify-content: center; align-items: center; padding: 20px;
+        background: rgba(0,0,0,0.3); backdrop-filter: blur(5px); z-index: 3000; 
+        display: none; justify-content: center; align-items: center; padding: 20px;
     }
     .settings-modal.open { display: flex; }
     .settings-content {
-        background: #fff; border: 2px solid var(--window-border); width: 100%; max-width: 400px; padding: 20px;
-        box-shadow: 5px 5px 0 rgba(0,0,0,0.2);
+        background: rgba(255,255,255,0.95); border: 1px solid #f8c8d4; border-radius: var(--border-radius);
+        width: 100%; max-width: 400px; padding: 30px; box-shadow: 0 20px 60px rgba(0,0,0,0.15);
     }
-    .settings-content h3 { margin: 0 0 15px 0; color: #4a6fa5; font-size: 16px; }
-    .settings-content label { font-size: 13px; color: #666; display: block; margin-bottom: 5px; }
-    .settings-content input[type="file"] { font-size: 12px; width: 100%; margin-bottom: 15px; }
-    .settings-content .btn { width: 100%; margin-top: 5px; }
+    .settings-content h3 { margin: 0 0 20px 0; color: #333; font-size: 18px; font-weight: 500; }
+    .settings-content label { font-size: 13px; color: #888; display: block; margin-bottom: 8px; }
+    .settings-content input[type="file"] { font-size: 12px; width: 100%; margin-bottom: 20px; color: #888; }
+    .settings-content input[type="text"] { 
+        width: 100%; padding: 10px; border: 1px solid #eee; border-radius: 8px; 
+        margin-bottom: 20px; font-size: 13px; outline: none; background: rgba(255,255,255,0.8);
+        font-family: var(--font-main);
+    }
+    .settings-content .btn { width: 100%; margin-top: 10px; background-image: var(--btn-pink); }
+    .settings-content .btn-grey { background-image: var(--btn-grey); }
 </style>
 </head>
 <body>
 
-<!-- 背景遮罩层 -->
 <div class="overlay" id="overlay"></div>
 
-<!-- 侧边栏（标签索引） -->
+<!-- 侧边栏 -->
 <div class="sidebar" id="sidebar">
     <div class="sidebar-header">
-        <h2># 标签索引</h2>
+        <h2>INDEX</h2>
         <button class="close-sidebar" id="close-sidebar">×</button>
     </div>
+    
+    <div class="avatar-wrapper">
+        <img src="你的图床链接/avatar-default.png" alt="头像" class="avatar" id="avatar-img" onclick="document.getElementById('avatar-upload').click()">
+        <input type="file" id="avatar-upload" class="avatar-upload" accept="image/*">
+    </div>
+
     <ul class="tag-list" id="tag-list">
         <li class="tag-item active" data-tag="all">📚 全部记录</li>
     </ul>
-    <div style="margin-top: 20px; border-top: 1px dashed #ccc; padding-top: 15px;">
-        <button class="btn" style="width:100%; background:#888; margin-bottom:10px;" onclick="openSettings()">⚙️ 网站设置</button>
-        <button class="btn" style="width:100%; background:#ff6b6b;" onclick="logout()">🚪 退出登录</button>
+
+    <div class="date-index-section">
+        <h3>📅 日期索引</h3>
+        <input type="date" class="date-picker-input" id="sidebar-date-picker">
+    </div>
+
+    <div style="margin-top: 20px; border-top: 1px solid rgba(0,0,0,0.05); padding-top: 20px;">
+        <button class="btn btn-grey" style="width:100%; margin-bottom:10px;" onclick="openSettings()">⚙️ 网站设置</button>
     </div>
 </div>
 
 <!-- 设置弹窗 -->
 <div class="settings-modal" id="settings-modal">
     <div class="settings-content">
-        <h3>⚙️ 网站设置</h3>
-        <label>上传自定义背景图（保存到本地浏览器）</label>
+        <h3>⚙️ 设置</h3>
+        <label>上传自定义背景图</label>
         <input type="file" id="bg-upload" accept="image/*">
-        <label>背景图片链接（选填，用于分享给他人）</label>
-        <input type="text" id="bg-url-input" placeholder="https://example.com/bg.jpg" style="width:100%; padding:8px; border:1px solid #ccc; border-radius:4px; margin-bottom:15px; font-size:13px;">
+        <label>背景图片链接（用于分享）</label>
+        <input type="text" id="bg-url-input" placeholder="https://example.com/bg.jpg">
         <button class="btn" onclick="saveBgFromUrl()">保存背景</button>
-        <button class="btn" style="background:#888;" onclick="closeSettings()">关闭</button>
+        <button class="btn btn-grey" onclick="closeSettings()">关闭</button>
     </div>
 </div>
 
 <!-- 顶部 -->
 <div class="top-header">
     <button class="menu-btn" id="menu-btn">☰</button>
-    <div>
+    <div class="title-wrapper">
         <h1 class="header-title">灵感实验室🪷</h1>
         <p class="date-display" id="date-display"></p>
     </div>
-    <div style="width:50px;"></div>
 </div>
 
-<!-- 顶部切换栏 -->
+<!-- 装饰图 -->
+<div class="deco-img"></div>
+
+<!-- 切换栏 -->
 <div class="nav-tabs">
     <div class="nav-tab active" id="tab-notes">📝 笔记</div>
     <div class="nav-tab" id="tab-trash">🗑️ 垃圾桶</div>
     <div class="nav-tab" id="tab-settings">⚙️ 设置</div>
 </div>
 
-<!-- 编辑器（窗口卡片风格） -->
+<!-- 编辑器 -->
 <div class="window-card" id="editor-card">
     <div class="window-title-bar">
-        <span>📝 new_diary.txt</span>
+        <span>NEW ENTRY</span>
         <div class="dots"><span></span><span></span><span></span></div>
     </div>
     <div class="window-body">
@@ -233,17 +417,17 @@
         </div>
         <div class="input-row">
             <input type="file" id="note-media" accept="image/*,video/*,.pdf,.doc,.docx,.txt">
-            <span id="file-name" style="font-size:12px; color:#4a6fa5;"></span>
+            <span id="file-name" style="font-size:12px; color:#888;"></span>
         </div>
 
         <div class="tag-input-row">
             <input type="text" id="tag-input" placeholder="输入标签，回车添加">
-            <button id="add-tag-btn">+ 添加</button>
+            <button id="add-tag-btn">ADD</button>
         </div>
         <div class="selected-tags" id="selected-tags"></div>
 
         <div class="editor-actions">
-            <button class="btn btn-yellow" id="save-btn">记录一下 ♡</button>
+            <button class="btn" id="save-btn">记录一下 ♡</button>
         </div>
     </div>
 </div>
@@ -271,19 +455,19 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-/* ========== 1. 初始化 Supabase ========== */
+/* ================= 1. Supabase 初始化 ================= */
 const SUPABASE_URL = "https://zpsbdymlofvzyskymagh.supabase.co";
 const SUPABASE_KEY = "sb_publishable_6jazDy0kesZQBPSBaY77Rg_qMTM6Hze";
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-/* ========== 2. 状态 ========== */
+/* ================= 2. 状态变量 ================= */
 let notes = [];
 let currentTag = 'all';
 let currentView = 'notes';
 let selectedDate = '';
 let pendingTags = [];
 
-/* ========== 3. 侧边栏控制 ========== */
+/* ================= 3. 侧边栏与深色模式逻辑 ================= */
 const sidebar = document.getElementById('sidebar');
 const overlay = document.getElementById('overlay');
 function openSidebar() { sidebar.classList.add('open'); overlay.classList.add('open'); }
@@ -292,11 +476,27 @@ document.getElementById('menu-btn').onclick = openSidebar;
 document.getElementById('close-sidebar').onclick = closeSidebar;
 overlay.onclick = closeSidebar;
 
-/* ========== 4. 日期显示 ========== */
-const today = new Date();
-document.getElementById('date-display').textContent = `${today.getFullYear()}年${today.getMonth()+1}月${today.getDate()}日 星期${'日一二三四五六'[today.getDay()]}`;
+// 用户头像上传
+document.getElementById('avatar-upload').onchange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+            document.getElementById('avatar-img').src = ev.target.result;
+            localStorage.setItem('userAvatar', ev.target.result);
+        };
+        reader.readAsDataURL(file);
+    }
+};
+// 加载头像
+const savedAvatar = localStorage.getItem('userAvatar');
+if (savedAvatar) document.getElementById('avatar-img').src = savedAvatar;
 
-/* ========== 5. 背景图设置 ========== */
+// 日期显示
+const today = new Date();
+document.getElementById('date-display').textContent = `${today.getFullYear()} / ${today.getMonth()+1} / ${today.getDate()}`;
+
+/* ================= 4. 背景设置逻辑 ================= */
 function loadBackground() {
     const savedBg = localStorage.getItem('customBg');
     if (savedBg) {
@@ -305,71 +505,47 @@ function loadBackground() {
 }
 loadBackground();
 
-function openSettings() {
-    document.getElementById('settings-modal').classList.add('open');
-    document.getElementById('bg-url-input').value = localStorage.getItem('customBg') || '';
-}
-function closeSettings() {
-    document.getElementById('settings-modal').classList.remove('open');
-}
+function openSettings() { document.getElementById('settings-modal').classList.add('open'); document.getElementById('bg-url-input').value = localStorage.getItem('customBg') || ''; }
+function closeSettings() { document.getElementById('settings-modal').classList.remove('open'); }
 
 document.getElementById('bg-upload').onchange = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
+    const file = e.target.files[0]; if (!file) return;
     const reader = new FileReader();
     reader.onload = (ev) => {
         const base64 = ev.target.result;
         localStorage.setItem('customBg', base64);
         document.body.style.backgroundImage = `url('${base64}')`;
-        alert("背景已保存到本地！注意：本地图片无法分享给他人，如果需要分享，请把图片上传到图床并把链接填入下方。");
+        alert("背景已保存到本地！如需分享给他人，请把图片链接填入下方。");
     };
     reader.readAsDataURL(file);
 };
 
 function saveBgFromUrl() {
     const url = document.getElementById('bg-url-input').value.trim();
-    if (url) {
-        localStorage.setItem('customBg', url);
-        document.body.style.backgroundImage = `url('${url}')`;
-        alert("背景已保存！");
-        closeSettings();
-    } else {
-        alert("请输入图片链接");
-    }
+    if (url) { localStorage.setItem('customBg', url); document.body.style.backgroundImage = `url('${url}')`; alert("背景已保存！"); closeSettings(); }
+    else { alert("请输入图片链接"); }
 }
 
-/* ========== 6. 标签输入逻辑 ========== */
+/* ================= 5. 标签与视图切换逻辑 ================= */
 function renderPendingTags() {
     const box = document.getElementById('selected-tags');
-    box.innerHTML = pendingTags.map((t, i) => `
-        <span class="selected-tag">${escapeHTML(t)} <button onclick="removePendingTag(${i})">×</button></span>
-    `).join("");
+    box.innerHTML = pendingTags.map((t, i) => `<span class="selected-tag">${escapeHTML(t)} <button onclick="removePendingTag(${i})">×</button></span>`).join("");
 }
-function removePendingTag(index) {
-    pendingTags.splice(index, 1);
-    renderPendingTags();
-}
+function removePendingTag(index) { pendingTags.splice(index, 1); renderPendingTags(); }
 function addPendingTag() {
     const input = document.getElementById('tag-input');
     const tag = input.value.trim();
-    if (tag && !pendingTags.includes(tag)) {
-        pendingTags.push(tag);
-        renderPendingTags();
-    }
+    if (tag && !pendingTags.includes(tag)) { pendingTags.push(tag); renderPendingTags(); }
     input.value = '';
 }
 document.getElementById('add-tag-btn').onclick = addPendingTag;
-document.getElementById('tag-input').addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') { e.preventDefault(); addPendingTag(); }
-});
+document.getElementById('tag-input').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); addPendingTag(); } });
 
-/* ========== 7. 文件选择提示 ========== */
 document.getElementById('note-media').onchange = (e) => {
     const file = e.target.files[0];
     if (file) document.getElementById('file-name').textContent = file.name;
 };
 
-/* ========== 8. 视图切换 ========== */
 function switchView(view) {
     currentView = view;
     if (view === 'notes') {
@@ -395,32 +571,25 @@ function switchView(view) {
     }
     renderNotes();
 }
-
 document.getElementById('tab-notes').onclick = () => switchView('notes');
 document.getElementById('tab-trash').onclick = () => switchView('trash');
 document.getElementById('tab-settings').onclick = () => switchView('settings');
-
-// 底部导航栏（兼容）
 document.getElementById('tab-notes-bottom').onclick = () => switchView('notes');
 document.getElementById('tab-trash-bottom').onclick = () => switchView('trash');
 
-/* ========== 9. 日期过滤 ========== */
-document.getElementById('filter-date').onchange = (e) => {
-    selectedDate = e.target.value;
-    renderNotes();
-};
-document.getElementById('clear-date').onclick = () => {
-    document.getElementById('filter-date').value = '';
-    selectedDate = '';
-    renderNotes();
+// 日期过滤
+document.getElementById('filter-date').onchange = (e) => { selectedDate = e.target.value; renderNotes(); };
+document.getElementById('clear-date').onclick = () => { document.getElementById('filter-date').value = ''; selectedDate = ''; renderNotes(); };
+document.getElementById('sidebar-date-picker').onchange = (e) => { 
+    selectedDate = e.target.value; 
+    document.getElementById('filter-date').value = selectedDate; 
+    renderNotes(); 
+    closeSidebar(); 
 };
 
-/* ========== 10. 加载与渲染 ========== */
+/* ================= 6. 数据加载与渲染 ================= */
 async function loadNotes() {
-    const { data, error } = await supabaseClient
-        .from('notes')
-        .select('*')
-        .order('created_at', { ascending: false });
+    const { data, error } = await supabaseClient.from('notes').select('*').order('created_at', { ascending: false });
     if (error) { console.error(error); return; }
     notes = data || [];
     renderSidebarTags();
@@ -430,40 +599,29 @@ async function loadNotes() {
 function renderSidebarTags() {
     const list = document.getElementById('tag-list');
     const allTags = new Set();
-    notes.forEach(n => {
-        if (n.tags && !n.deleted) {
-            n.tags.split(',').forEach(t => allTags.add(t.trim()));
-        }
-    });
-
+    notes.forEach(n => { if (n.tags && !n.deleted) n.tags.split(',').forEach(t => allTags.add(t.trim())); });
     let html = `<li class="tag-item ${currentTag === 'all' ? 'active' : ''}" data-tag="all">📚 全部记录</li>`;
-    allTags.forEach(tag => {
-        html += `<li class="tag-item ${currentTag === tag ? 'active' : ''}" data-tag="${tag}">🏷️ ${escapeHTML(tag)}</li>`;
-    });
+    allTags.forEach(tag => { html += `<li class="tag-item ${currentTag === tag ? 'active' : ''}" data-tag="${tag}">🏷️ ${escapeHTML(tag)}</li>`; });
     list.innerHTML = html;
-
     document.querySelectorAll('.tag-item').forEach(item => {
-        item.onclick = () => {
-            currentTag = item.dataset.tag;
-            renderSidebarTags();
-            renderNotes();
-            closeSidebar();
-        };
+        item.onclick = () => { currentTag = item.dataset.tag; renderSidebarTags(); renderNotes(); closeSidebar(); };
     });
 }
 
 function renderNotes() {
     const list = document.getElementById('note-list');
     let filtered = notes.filter(n => n.deleted === (currentView === 'trash'));
-
     if (selectedDate) filtered = filtered.filter(n => n.date === selectedDate);
+    if (currentTag !== 'all') filtered = filtered.filter(n => n.tags && n.tags.split(',').map(t => t.trim()).includes(currentTag));
 
-    if (currentTag !== 'all') {
-        filtered = filtered.filter(n => n.tags && n.tags.split(',').map(t => t.trim()).includes(currentTag));
+    if (currentView === 'trash') {
+        list.className = 'note-list trash-container';
+    } else {
+        list.className = 'note-list';
     }
 
     if (filtered.length === 0) {
-        list.innerHTML = `<div class="empty-tip">${currentView === 'notes' ? '还没有记录哦，快写点废话吧 ♡' : '垃圾桶是空的 🗑️'}</div>`;
+        list.innerHTML = `<div class="empty-tip">${currentView === 'notes' ? '这里空空的，写点什么吧 ♡' : '垃圾桶是空的 🗑️'}</div>`;
         return;
     }
 
@@ -476,10 +634,27 @@ function renderNotes() {
         }
         let linkHtml = n.link_url ? `<a href="${n.link_url}" target="_blank" class="note-link">🔗 ${escapeHTML(n.link_url)}</a>` : '';
 
+        // 智能匹配卡片背景
+        let cardClass = 'note-card';
+        const contentLength = n.content ? n.content.length : 0;
+        const hasMedia = !!n.media_url;
+        
+        if (hasMedia && !n.content) {
+            cardClass += ' card-img-only';
+        } else if (hasMedia && n.media_type === 'image') {
+            cardClass += ' card-img-1';
+        } else if (contentLength > 50) {
+            cardClass += ' card-text-big';
+        } else if (contentLength > 0) {
+            cardClass += ' card-text-short';
+        } else {
+            cardClass += ' card-text-long';
+        }
+
         return `
-            <div class="note-card">
+            <div class="${cardClass}">
                 <div class="note-title-bar">
-                    <span>📄 ${escapeHTML(n.title || '未命名笔记')}</span>
+                    <span>${escapeHTML(n.title || 'UNTITLED')}</span>
                     <div class="dots"><span></span><span></span><span></span></div>
                 </div>
                 <div class="note-body">
@@ -506,11 +681,9 @@ function renderNotes() {
     }).join("");
 }
 
-function escapeHTML(text) {
-    return String(text || "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
-}
+function escapeHTML(text) { return String(text || "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 
-/* ========== 11. 保存笔记 ========== */
+/* ================= 7. 保存与删除逻辑 ================= */
 document.getElementById('save-btn').onclick = async function() {
     const content = document.getElementById('note-content').value.trim();
     const link = document.getElementById('note-link').value.trim();
@@ -519,19 +692,14 @@ document.getElementById('save-btn').onclick = async function() {
 
     if (!content && !file && !link) return alert("写点什么或者加个文件吧 ♡");
 
-    this.disabled = true;
-    this.textContent = "保存中...";
+    this.disabled = true; this.textContent = "保存中...";
 
     let mediaUrl = null, mediaType = null;
     if (file) {
         const fileExt = file.name.split('.').pop();
         const fileName = `${Date.now()}.${fileExt}`;
         const { error: uploadError } = await supabaseClient.storage.from('note-media').upload(fileName, file);
-        if (uploadError) {
-            alert("文件上传失败：" + uploadError.message);
-            this.disabled = false; this.textContent = "记录一下 ♡";
-            return;
-        }
+        if (uploadError) { alert("文件上传失败：" + uploadError.message); this.disabled = false; this.textContent = "记录一下 ♡"; return; }
         const { data: urlData } = supabaseClient.storage.from('note-media').getPublicUrl(fileName);
         mediaUrl = urlData.publicUrl;
         if (file.type.startsWith('image/')) mediaType = 'image';
@@ -542,53 +710,31 @@ document.getElementById('save-btn').onclick = async function() {
     const now = new Date();
     const dateStr = now.toISOString().split('T')[0];
     const tagsStr = pendingTags.join(',');
-    // 用内容的前15个字作为标题，方便窗口显示
     const title = content.substring(0, 15) + (content.length > 15 ? '...' : '');
 
     const { error } = await supabaseClient.from('notes').insert({
-        id: Date.now().toString(36),
-        date: dateStr,
-        content: content,
-        media_url: mediaUrl,
-        media_type: mediaType,
-        link_url: link,
-        tags: tagsStr,
-        title: title,
-        deleted: false
+        id: Date.now().toString(36), date: dateStr, content: content,
+        media_url: mediaUrl, media_type: mediaType, link_url: link,
+        tags: tagsStr, title: title, deleted: false
     });
 
-    if (error) {
-        alert("保存失败：" + error.message);
-    } else {
+    if (error) { alert("保存失败：" + error.message); } 
+    else {
         document.getElementById('note-content').value = '';
         document.getElementById('note-link').value = '';
         fileInput.value = '';
         document.getElementById('file-name').textContent = '';
-        pendingTags = [];
-        renderPendingTags();
+        pendingTags = []; renderPendingTags();
         await loadNotes();
     }
-    this.disabled = false;
-    this.textContent = "记录一下 ♡";
+    this.disabled = false; this.textContent = "记录一下 ♡";
 };
 
-/* ========== 12. 删除与恢复 ========== */
-async function moveToTrash(id) {
-    if (!confirm("移入垃圾桶？")) return;
-    await supabaseClient.from('notes').update({ deleted: true }).eq('id', id);
-    await loadNotes();
-}
-async function restoreNote(id) {
-    await supabaseClient.from('notes').update({ deleted: false }).eq('id', id);
-    await loadNotes();
-}
-async function deletePermanently(id) {
-    if (!confirm("彻底删除？不可恢复！")) return;
-    await supabaseClient.from('notes').delete().eq('id', id);
-    await loadNotes();
-}
+async function moveToTrash(id) { if (!confirm("移入垃圾桶？")) return; await supabaseClient.from('notes').update({ deleted: true }).eq('id', id); await loadNotes(); }
+async function restoreNote(id) { await supabaseClient.from('notes').update({ deleted: false }).eq('id', id); await loadNotes(); }
+async function deletePermanently(id) { if (!confirm("彻底删除？不可恢复！")) return; await supabaseClient.from('notes').delete().eq('id', id); await loadNotes(); }
 
-/* ========== 初始化 ========== */
+/* ================= 初始化 ================= */
 loadNotes();
 </script>
 </body>
