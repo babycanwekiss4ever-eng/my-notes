@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>灵感实验室 | Rainy Day</title>
+<title>灵感实验室</title>
 <style>
     /* ================= 全局变量 ================= */
     :root {
@@ -33,35 +33,14 @@
         background-attachment: fixed;
     }
 
-    /* ================= 雨天雾面遮罩（修复层级问题） ================= */
     body::before {
         content: '';
         position: fixed;
         top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(238, 242, 245, 0.15);
+        background: rgba(238, 242, 245, 0.2);
         backdrop-filter: blur(2px);
-        z-index: 0; /* 提升遮罩层，使其处于雨滴之上，产生雾面感 */
+        z-index: -1;
         pointer-events: none;
-    }
-
-    /* ================= 雨滴特效（彻底修复） ================= */
-    .rain-container {
-        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-        pointer-events: none; z-index: 1; /* 比遮罩层高，确保可见 */
-        overflow: hidden;
-    }
-    .rain-drop {
-        position: absolute;
-        background: linear-gradient(to bottom, rgba(143, 168, 184, 0), rgba(143, 168, 184, 0.5));
-        width: 1.5px;
-        height: 40px; 
-        opacity: 0.5;
-        animation: fall linear infinite;
-        /* 轻微倾斜，像风吹过 */
-        transform: rotate(10deg);
-    }
-    @keyframes fall { 
-        to { transform: translateY(100vh) rotate(10deg); } 
     }
 
     /* ================= 顶部区域 ================= */
@@ -71,10 +50,9 @@
         flex-direction: column;
         align-items: center;
         position: relative;
-        z-index: 2; /* 内容层级高于雨滴和遮罩 */
+        z-index: 2;
     }
     
-    /* 菜单栏独立一行，彻底解决遮挡问题 */
     .menu-row {
         width: 100%;
         max-width: 380px;
@@ -107,7 +85,6 @@
     .title-card.has-bg::before { background: rgba(255, 255, 255, 0.6); }
     .title-card > * { position: relative; z-index: 2; }
     
-    /* 顶部装饰星星 */
     .title-deco {
         font-size: 16px; color: var(--pink-border); letter-spacing: 6px; margin-bottom: 5px;
     }
@@ -127,13 +104,13 @@
     .title-card.has-bg .title-hint { opacity: 0.4; }
     .title-bg-upload { display: none; }
 
-    /* ================= 顶部导航（手机端一行完美并列） ================= */
+    /* ================= 顶部导航 ================= */
     .nav-tabs {
         display: flex;
         gap: 6px;
         padding: 0 15px 25px;
         justify-content: center;
-        flex-wrap: nowrap; /* 禁止换行 */
+        flex-wrap: nowrap;
         position: relative;
         z-index: 2;
     }
@@ -149,7 +126,7 @@
         transition: all 0.3s;
         flex: 1;
         text-align: center;
-        white-space: nowrap; /* 文字不换行 */
+        white-space: nowrap;
         max-width: 90px;
     }
     .nav-tab.active { background: var(--accent); color: #fff; font-weight: 500; }
@@ -169,7 +146,6 @@
         border-bottom: 1px solid var(--border-light);
     }
 
-    /* 输入区 */
     .glass-card textarea {
         width: 100%; border: none; resize: none; font-size: 15px; font-family: var(--font-main);
         outline: none; min-height: 90px; color: var(--text-main); padding: 0;
@@ -184,7 +160,6 @@
     }
     .input-row input[type="file"] { font-size: 12px; color: var(--text-sub); width: 100%; }
     
-    /* 标签输入 */
     .tag-input-row { display: flex; gap: 12px; margin-top: 18px; align-items: flex-end; }
     .tag-input-row input {
         flex: 1; border: none; border-bottom: 1px solid var(--border-light);
@@ -205,7 +180,6 @@
     }
     .selected-tag button { background: none; border: none; color: var(--accent); cursor: pointer; font-size: 14px; padding: 0; line-height: 1; }
 
-    /* 按钮 */
     .btn {
         border: none; padding: 10px 28px; border-radius: 24px; font-size: 14px;
         cursor: pointer; transition: all 0.3s; background: var(--accent); color: #fff;
@@ -216,7 +190,7 @@
     .btn-outline { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
     .btn-outline:hover { background: var(--accent); color: #fff; }
 
-    /* ================= 聊天界面 ================= */
+    /* ================= 聊天界面（用户无头像） ================= */
     .chat-container {
         margin: 0 25px 25px; background: var(--card-bg); backdrop-filter: blur(12px);
         border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.5);
@@ -234,7 +208,7 @@
         display: flex; flex-direction: column; gap: 15px;
     }
     .message-row { display: flex; gap: 10px; max-width: 85%; }
-    .message-row.user { align-self: flex-end; flex-direction: row-reverse; }
+    .message-row.user { align-self: flex-end; flex-direction: row-reverse; justify-content: flex-end; }
     .message-row.ai { align-self: flex-start; }
     
     .message-avatar {
@@ -308,7 +282,7 @@
     .sidebar h2 { font-size: 14px; margin: 0; font-weight: 400; color: var(--text-sub); letter-spacing: 3px; }
     .close-sidebar { background: none; border: none; font-size: 24px; cursor: pointer; color: #ccc; padding: 0; line-height: 1; }
     
-    .avatar-wrapper { text-align: center; margin-bottom: 35px; }
+    .avatar-wrapper { text-align: center; margin-bottom: 25px; }
     .avatar {
         width: 72px; height: 72px; border-radius: 50%; margin: 0 auto;
         display: flex; align-items: center; justify-content: center;
@@ -319,6 +293,16 @@
     .avatar-inner { width: 100%; height: 100%; object-fit: cover; display: none; }
     .avatar-text { color: #b0b8bf; font-size: 11px; }
     .avatar-upload { display: none; }
+
+    /* 用户 ID 展示区 */
+    .user-id-section {
+        text-align: center;
+        padding: 15px 0 25px;
+        border-bottom: 1px solid var(--border-light);
+        margin-bottom: 25px;
+    }
+    .user-id-label { font-size: 11px; color: var(--text-sub); margin-bottom: 5px; letter-spacing: 1px; }
+    .user-id-value { font-size: 16px; font-weight: 500; color: var(--text-main); }
 
     .tag-list { list-style: none; padding: 0; margin: 0; }
     .tag-list li {
@@ -375,9 +359,6 @@
 </head>
 <body>
 
-<!-- 雨滴容器 -->
-<div class="rain-container" id="rain-container"></div>
-
 <div class="overlay" id="overlay"></div>
 
 <!-- 侧边栏 -->
@@ -393,6 +374,12 @@
             <span class="avatar-text" id="user-avatar-text">上传头像</span>
         </div>
         <input type="file" id="user-avatar-upload" class="avatar-upload" accept="image/*">
+    </div>
+
+    <!-- 用户 ID 展示 -->
+    <div class="user-id-section">
+        <div class="user-id-label">我的 ID</div>
+        <div class="user-id-value" id="user-id-display">未命名</div>
     </div>
 
     <ul class="tag-list" id="tag-list"></ul>
@@ -412,6 +399,13 @@
     <div class="settings-content">
         <h3>⚙️ 设置</h3>
         
+        <h4 style="font-size:13px; color:#333; margin-bottom:15px;">👤 个人资料</h4>
+        <label>我的 ID / 昵称</label>
+        <input type="text" id="user-name-input" placeholder="输入你的专属 ID">
+        <button class="btn btn-grey" onclick="saveUserName()">保存 ID</button>
+
+        <hr style="border:none; border-top:1px solid #eee; margin:25px 0;">
+
         <h4 style="font-size:13px; color:#333; margin-bottom:15px;">🖼️ 背景设置</h4>
         <label>上传自定义背景图（笔记界面）</label>
         <input type="file" id="bg-upload" accept="image/*">
@@ -468,7 +462,7 @@
 <div class="view-section active" id="view-notes">
     <div class="glass-card" id="editor-card">
         <div class="card-label">NEW ENTRY</div>
-        <textarea id="note-content" placeholder="今天下雨了，有什么想写的吗..."></textarea>
+        <textarea id="note-content" placeholder="今天有什么想写的吗..."></textarea>
         <div class="input-row">
             <input type="text" id="note-link" placeholder="添加链接（选填）">
         </div>
@@ -533,28 +527,9 @@ let currentView = 'notes';
 let selectedDate = '';
 let pendingTags = [];
 let chatHistory = JSON.parse(localStorage.getItem('chatHistory')) || [];
+let userName = localStorage.getItem('userName') || '未命名';
 
-/* ================= 3. 初始化雨滴效果 ================= */
-function initRain() {
-    const container = document.getElementById('rain-container');
-    const dropCount = 60; // 增加雨滴数量
-    for (let i = 0; i < dropCount; i++) {
-        const drop = document.createElement('div');
-        drop.className = 'rain-drop';
-        drop.style.left = Math.random() * 100 + '%';
-        // 加快下落速度
-        drop.style.animationDuration = (Math.random() * 1.5 + 1.5) + 's'; 
-        drop.style.animationDelay = Math.random() * 2 + 's';
-        // 随机高度
-        drop.style.height = (Math.random() * 40 + 30) + 'px'; 
-        // 增加不透明度，使其更明显
-        drop.style.opacity = Math.random() * 0.4 + 0.3; 
-        container.appendChild(drop);
-    }
-}
-initRain();
-
-/* ================= 4. 侧边栏与导航逻辑 ================= */
+/* ================= 3. 侧边栏与导航逻辑 ================= */
 const sidebar = document.getElementById('sidebar');
 const overlay = document.getElementById('overlay');
 function openSidebar() { sidebar.classList.add('open'); overlay.classList.add('open'); }
@@ -591,7 +566,7 @@ document.getElementById('tab-trash').onclick = () => switchView('trash');
 document.getElementById('tab-chat').onclick = () => switchView('chat');
 document.getElementById('tab-settings').onclick = () => switchView('settings');
 
-/* ================= 5. 用户头像与标题背景上传 ================= */
+/* ================= 4. 用户头像、ID 与标题背景上传 ================= */
 document.getElementById('user-avatar-upload').onchange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -611,6 +586,12 @@ if (savedAvatar) {
     document.getElementById('user-avatar-inner').style.display = 'block';
     document.getElementById('user-avatar-text').style.display = 'none';
 }
+
+// 渲染用户 ID
+function renderUserId() {
+    document.getElementById('user-id-display').textContent = userName;
+}
+renderUserId();
 
 document.getElementById('title-bg-upload').onchange = (e) => {
     const file = e.target.files[0];
@@ -635,7 +616,7 @@ if (savedTitleBg) {
 const today = new Date();
 document.getElementById('date-display').textContent = `${today.getFullYear()} / ${today.getMonth()+1} / ${today.getDate()}`;
 
-/* ================= 6. 笔记逻辑 ================= */
+/* ================= 5. 笔记逻辑 ================= */
 document.getElementById('add-tag-btn').onclick = () => {
     const input = document.getElementById('tag-input');
     const tag = input.value.trim();
@@ -707,7 +688,8 @@ async function loadNotes() {
     if (error) { console.error(error); return; }
     notes = data || [];
     renderSidebarTags();
-    renderNotes();
+    if (currentView === 'trash') renderTrash();
+    else renderNotes();
 }
 
 function renderSidebarTags() {
@@ -781,9 +763,52 @@ function renderNoteCard(n, isTrash) {
 }
 
 function escapeHTML(text) { return String(text || "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
-async function moveToTrash(id) { if (!confirm("移入垃圾桶？")) return; await supabaseClient.from('notes').update({ deleted: true }).eq('id', id); await loadNotes(); }
-async function restoreNote(id) { await supabaseClient.from('notes').update({ deleted: false }).eq('id', id); await loadNotes(); }
-async function deletePermanently(id) { if (!confirm("彻底删除？不可恢复！")) return; await supabaseClient.from('notes').delete().eq('id', id); await loadNotes(); }
+
+/* ================= 6. 删除与恢复逻辑（实时响应） ================= */
+async function moveToTrash(id) {
+    if (!confirm("移入垃圾桶？")) return;
+    const note = notes.find(n => n.id === id);
+    if (note) note.deleted = true;
+    renderNotes(); if (currentView === 'trash') renderTrash();
+    try {
+        const { error } = await supabaseClient.from('notes').update({ deleted: true }).eq('id', id);
+        if (error) throw error;
+    } catch (error) {
+        alert("操作失败：" + error.message);
+        if (note) note.deleted = false;
+        renderNotes(); if (currentView === 'trash') renderTrash();
+    }
+}
+
+async function restoreNote(id) {
+    const note = notes.find(n => n.id === id);
+    if (note) note.deleted = false;
+    renderTrash(); if (currentView === 'notes') renderNotes();
+    try {
+        const { error } = await supabaseClient.from('notes').update({ deleted: false }).eq('id', id);
+        if (error) throw error;
+    } catch (error) {
+        alert("操作失败：" + error.message);
+        if (note) note.deleted = true;
+        renderTrash(); if (currentView === 'notes') renderNotes();
+    }
+}
+
+async function deletePermanently(id) {
+    if (!confirm("彻底删除？不可恢复！")) return;
+    const index = notes.findIndex(n => n.id === id);
+    if (index === -1) return;
+    const removedNote = notes.splice(index, 1)[0];
+    renderTrash();
+    try {
+        const { error } = await supabaseClient.from('notes').delete().eq('id', id);
+        if (error) throw error;
+    } catch (error) {
+        alert("删除失败：" + error.message);
+        notes.splice(index, 0, removedNote);
+        renderTrash();
+    }
+}
 
 document.getElementById('filter-date').onchange = (e) => { selectedDate = e.target.value; renderNotes(); };
 document.getElementById('clear-date').onclick = () => { document.getElementById('filter-date').value = ''; selectedDate = ''; renderNotes(); };
@@ -793,7 +818,7 @@ document.getElementById('sidebar-date-picker').onchange = (e) => {
     renderNotes(); closeSidebar();
 };
 
-/* ================= 7. AI 聊天逻辑 ================= */
+/* ================= 7. AI 聊天逻辑（用户无头像） ================= */
 function getAIConfig() {
     return JSON.parse(localStorage.getItem('aiChatConfig')) || {
         name: 'AI 伙伴', avatar: '', personality: '你是一个温柔、善解人意的聊天伙伴。',
@@ -806,18 +831,20 @@ function renderChatHistory() {
     const config = getAIConfig();
     document.getElementById('chat-ai-name').textContent = config.name;
     
+    // 首条 AI 欢迎语
     let html = `<div class="message-row ai">
-        <div class="message-avatar" id="chat-ai-avatar-display">${config.avatar ? `<img src="${config.avatar}">` : '🤖'}</div>
+        <div class="message-avatar">${config.avatar ? `<img src="${config.avatar}">` : '🤖'}</div>
         <div class="message-bubble">你好，我是${config.name}，今天想聊点什么？</div>
     </div>`;
     
     chatHistory.forEach(msg => {
         if (msg.role === 'user') {
+            // 用户消息：无头像，直接气泡
             html += `<div class="message-row user">
-                <div class="message-avatar">👤</div>
                 <div class="message-bubble">${escapeHTML(msg.content)}</div>
             </div>`;
         } else {
+            // AI 消息：有头像
             html += `<div class="message-row ai">
                 <div class="message-avatar">${config.avatar ? `<img src="${config.avatar}">` : '🤖'}</div>
                 <div class="message-bubble">${escapeHTML(msg.content)}</div>
@@ -893,8 +920,19 @@ function openSettings() {
     document.getElementById('ai-api-url').value = config.url;
     document.getElementById('ai-api-key').value = config.key;
     document.getElementById('ai-model-input').value = config.model;
+    document.getElementById('user-name-input').value = userName;
 }
 function closeSettings() { document.getElementById('settings-modal').classList.remove('open'); }
+
+// 保存用户 ID
+function saveUserName() {
+    const newId = document.getElementById('user-name-input').value.trim();
+    if (!newId) { alert("请输入 ID"); return; }
+    userName = newId;
+    localStorage.setItem('userName', userName);
+    renderUserId();
+    alert("ID 已保存！");
+}
 
 document.getElementById('bg-upload').onchange = (e) => {
     const file = e.target.files[0]; if (!file) return;
