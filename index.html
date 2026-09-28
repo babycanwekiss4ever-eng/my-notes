@@ -3,13 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>灵感实验室🪷</title>
+<title>Malb♡r☆</title>
 <style>
     /* ================= 全局变量与基础 ================= */
     :root {
-        /* 核心：黑体字 */
         --font-main: "SimHei", "Heiti SC", "Microsoft YaHei", "PingFang SC", sans-serif;
-
+        
         /* 背景图链接 */
         --bg-day: url('https://zpsbdymlofvzyskymagh.supabase.co/storage/v1/object/public/assets/bg-day-pc.png');
         --bg-night: url('https://zpsbdymlofvzyskymagh.supabase.co/storage/v1/object/public/assets/bg-night-pc.png');
@@ -58,7 +57,7 @@
         color: var(--text-main); 
         padding-bottom: 80px; 
         overflow-x: hidden; 
-        transition: background-image 0.4s ease, margin-left 0.3s ease; 
+        transition: background-image 0.4s ease; 
         line-height: 1.6;
     }
     body::before {
@@ -78,86 +77,30 @@
         }
     }
 
-    /* ================= 侧边栏 ================= */
-    .sidebar {
-        position: fixed; top: 0; left: 0; width: 280px; height: 100vh;
-        background: rgba(255, 255, 255, 0.85); 
-        backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-        border-right: 1px solid rgba(255,255,255,0.5);
-        padding: 30px 20px; overflow-y: auto; z-index: 2000;
-        transform: translateX(-100%); transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        box-shadow: 4px 0 30px rgba(0,0,0,0.05);
-    }
-    .sidebar.open { transform: translateX(0); }
-    .sidebar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-    .sidebar h2 { font-size: 18px; margin: 0; font-weight: 600; color: #555; }
-    .close-sidebar { background: none; border: none; font-size: 24px; cursor: pointer; color: #999; }
-    
-    /* 头像 */
-    .avatar-wrapper { text-align: center; margin-bottom: 20px; }
-    .avatar {
-        width: 80px; height: 80px; border-radius: 50%; 
-        background: #fff; border: 2px solid #f8c8d4;
-        margin: 0 auto; display: block; object-fit: cover;
-        cursor: pointer;
-    }
-    .avatar-upload { display: none; }
-
-    /* 标签索引 */
-    .tag-list { list-style: none; padding: 0; margin: 0; }
-    .tag-list li {
-        padding: 12px 15px; border-radius: 12px; cursor: pointer; margin-bottom: 8px;
-        font-size: 14px; color: #555; transition: all 0.3s ease;
-        background-image: var(--btn-blank); 
-        background-size: 100% 100%; background-repeat: no-repeat;
-        border: none;
-    }
-    .tag-list li:hover { background-image: var(--btn-pink); color: #fff; transform: translateX(4px); }
-    .tag-list li.active { background-image: var(--btn-pink); color: #fff; font-weight: 500; }
-
-    /* 日期索引 */
-    .date-index-section { margin-top: 20px; }
-    .date-index-section h3 { font-size: 14px; color: #888; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
-    .date-picker-input {
-        width: 100%; padding: 10px; border: 1px solid #f8c8d4; border-radius: 12px;
-        font-family: inherit; font-size: 14px; outline: none; background: #fff;
-    }
-
-    /* 遮罩层 */
-    .overlay {
-        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(0,0,0,0.2); backdrop-filter: blur(4px); z-index: 1500; 
-        display: none; opacity: 0; transition: opacity 0.3s;
-    }
-    .overlay.open { display: block; opacity: 1; }
-
-    /* ================= 顶部 ================= */
+    /* ================= 顶部（标题居中，点击可设置） ================= */
     .top-header { 
-        padding: 30px 30px 20px; 
-        display: flex; justify-content: space-between; align-items: flex-start; 
+        padding: 20px 15px 10px; 
+        display: flex; 
+        flex-direction: column; 
+        align-items: center; 
         position: relative; 
     }
-    .menu-btn { 
-        background: none; border: none; cursor: pointer; 
-        background-image: var(--btn-grey); background-size: 100% 100%; 
-        width: 45px; height: 45px;
-        text-indent: -9999px; color: transparent; 
-    }
-    
-    /* 标题 */
     .title-wrapper { 
-        text-align: right; 
+        text-align: center; 
         background-image: var(--title-bg-img); 
         background-size: cover; 
         background-position: center;
-        padding: 15px 25px; 
+        padding: 20px 40px; 
         border-radius: var(--border-radius); 
         position: relative;
-        min-width: 200px;
+        width: 100%;
+        max-width: 350px;
+        cursor: pointer;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
     }
     .title-wrapper::before { 
         content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-        background: rgba(255,255,255,0.6); border-radius: var(--border-radius); 
+        background: rgba(255,255,255,0.7); border-radius: var(--border-radius); 
     }
     .header-title {
         font-size: 28px; color: #333; margin: 0; font-weight: 500;
@@ -173,26 +116,29 @@
     }
 
     /* ================= 切换栏 ================= */
-    .nav-tabs { display: flex; gap: 10px; padding: 0 30px 20px; flex-wrap: wrap; position: relative; z-index: 2; }
+    .nav-tabs { display: flex; gap: 10px; padding: 0 15px 15px; flex-wrap: wrap; position: relative; z-index: 2; }
     .nav-tab {
         flex: 1; text-align: center; padding: 12px 10px; font-size: 14px;
         background: none; border: none; cursor: pointer; color: #555;
         background-image: var(--btn-blank); background-size: 100% 100%; 
         background-repeat: no-repeat; transition: all 0.3s ease;
     }
-    .nav-tab:hover { background-image: var(--btn-pink); color: #fff; }
-    .nav-tab.active { background-image: var(--btn-pink); color: #fff; font-weight: bold; }
+    /* 选中时变成灰暗色，字体白色 */
+    .nav-tab.active { 
+        filter: grayscale(100%) brightness(0.6); 
+        color: #ffffff !important; 
+        font-weight: bold; 
+    }
 
-    /* ================= 窗口卡片 ================= */
+    /* ================= 窗口卡片（全宽） ================= */
     .window-card {
         background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(15px);
-        margin: 0 30px 20px; padding: 0; border-radius: var(--border-radius);
+        margin: 0 15px 20px; padding: 0; border-radius: var(--border-radius);
         box-shadow: 0 4px 20px rgba(0,0,0,0.04);
         border: 1px solid rgba(255,255,255,0.8); position: relative; overflow: hidden;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
         z-index: 2;
     }
-    .window-card:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(0,0,0,0.06); }
     .window-title-bar {
         padding: 12px 20px; font-size: 12px; color: #888; 
         border-bottom: 1px solid rgba(0,0,0,0.05);
@@ -244,7 +190,7 @@
     .btn:disabled { opacity: 0.4; }
 
     /* 日期过滤器 */
-    .date-filter { padding: 0 30px 20px; display: flex; align-items: center; gap: 15px; flex-wrap: wrap; z-index: 2; position: relative; }
+    .date-filter { padding: 0 15px 15px; display: flex; align-items: center; gap: 15px; flex-wrap: wrap; z-index: 2; position: relative; }
     .date-filter input[type="date"] { 
         border: 1px solid #f8c8d4; border-radius: 12px; padding: 8px 15px; 
         font-size: 13px; font-family: inherit; background: rgba(255,255,255,0.8); outline: none; 
@@ -254,9 +200,106 @@
         background: none; border: none; font-size: 13px; color: #d98a9a; font-weight: bold; cursor: pointer; 
     }
 
-    /* ================= 笔记列表 ================= */
-    .note-list { padding: 0 30px; display: flex; flex-direction: column; gap: 20px; position: relative; z-index: 2; }
+    /* ================= 侧边栏（头像框与文件夹） ================= */
+    .sidebar {
+        position: fixed; top: 0; left: 0; width: 280px; height: 100vh;
+        background: rgba(255, 255, 255, 0.9); 
+        backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+        border-right: 1px solid rgba(255,255,255,0.5);
+        padding: 30px 20px; overflow-y: auto; z-index: 2000;
+        transform: translateX(-100%); transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        box-shadow: 4px 0 30px rgba(0,0,0,0.05);
+    }
+    .sidebar.open { transform: translateX(0); }
+    .sidebar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .sidebar h2 { font-size: 18px; margin: 0; font-weight: 600; color: #555; }
+    .close-sidebar { background: none; border: none; font-size: 24px; cursor: pointer; color: #999; }
     
+    /* 头像框（使用手机默认图片） */
+    .avatar-wrapper { text-align: center; margin-bottom: 20px; }
+    .avatar {
+        width: 100px; height: 100px; 
+        margin: 0 auto; display: block; 
+        background-image: var(--avatar-default); 
+        background-size: cover; background-position: center;
+        cursor: pointer; border: none;
+        position: relative;
+    }
+    .avatar-inner {
+        width: 60px; height: 60px; border-radius: 50%; object-fit: cover;
+        margin: 18px auto 0; display: block; border: 2px solid #f8c8d4;
+    }
+    .avatar-upload { display: none; }
+
+    /* 标签索引（文件夹形状） */
+    .tag-list { list-style: none; padding: 0; margin: 0; }
+    .tag-list li {
+        padding: 15px 15px 10px; margin-bottom: 18px; 
+        font-size: 14px; color: #555; cursor: pointer; 
+        position: relative; border-radius: 0 12px 12px 12px;
+        background-color: #fce4ec; border: 2px solid #f8c8d4;
+        transition: all 0.3s ease;
+        background-image: var(--btn-blank); background-size: 100% 100%; background-repeat: no-repeat;
+        border: none;
+        display: flex; flex-direction: column; justify-content: flex-end; min-height: 50px;
+    }
+    /* 文件夹顶部小标签 */
+    .tag-list li::before {
+        content: '';
+        position: absolute; top: -10px; left: -2px;
+        width: 50px; height: 12px;
+        background-color: inherit;
+        border: 2px solid #f8c8d4; border-bottom: none;
+        border-radius: 8px 8px 0 0;
+    }
+    /* 文件夹左下角的深色文字 */
+    .tag-list li .folder-label {
+        position: absolute; bottom: 5px; left: 10px;
+        font-size: 11px; font-weight: bold; color: #333; opacity: 0.8;
+    }
+    .tag-list li:hover { background-image: var(--btn-pink); transform: translateX(4px); }
+    .tag-list li.active { 
+        filter: grayscale(100%) brightness(0.7); 
+        color: #fff !important; 
+        font-weight: 500; 
+    }
+    .tag-list li.active .folder-label { color: #fff; }
+
+    /* 日期索引 */
+    .date-index-section { margin-top: 20px; }
+    .date-index-section h3 { font-size: 14px; color: #888; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
+    .date-picker-input {
+        width: 100%; padding: 10px; border: 1px solid #f8c8d4; border-radius: 12px;
+        font-family: inherit; font-size: 14px; outline: none; background: #fff;
+    }
+
+    /* 遮罩层 */
+    .overlay {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.2); backdrop-filter: blur(4px); z-index: 1500; 
+        display: none; opacity: 0; transition: opacity 0.3s;
+    }
+    .overlay.open { display: block; opacity: 1; }
+
+    /* ================= 底部导航栏 ================= */
+    .bottom-nav { 
+        position: fixed; bottom: 0; left: 0; width: 100%; 
+        background: rgba(255,255,255,0.85); backdrop-filter: blur(15px); 
+        border-top: 1px solid rgba(255,255,255,0.8); 
+        display: flex; justify-content: space-around; padding: 10px 0 20px; z-index: 1000; 
+    }
+    .nav-item { 
+        text-align: center; font-size: 11px; color: #999; 
+        cursor: pointer; display: flex; flex-direction: column; align-items: center; 
+        gap: 4px; width: 33%; transition: 0.3s;
+    }
+    .nav-item.active { color: #d98a9a; font-weight: 600; }
+    .nav-item:hover { color: #d98a9a; }
+    .nav-icon { font-size: 20px; }
+    .empty-tip { text-align: center; color: #aaa; padding: 40px 20px; font-size: 14px; }
+
+    /* ================= 笔记列表 ================= */
+    .note-list { padding: 0 15px; display: flex; flex-direction: column; gap: 20px; position: relative; z-index: 2; }
     .note-card {
         background-color: rgba(255,255,255,0.7); backdrop-filter: blur(10px);
         border: 1px solid rgba(255,255,255,0.8); border-radius: var(--border-radius);
@@ -295,27 +338,10 @@
     /* ================= 垃圾桶 ================= */
     .trash-container {
         background-image: var(--trash-bg); background-size: cover; background-position: center;
-        margin: 20px 30px; border-radius: 30px; padding: 30px 15px;
+        margin: 20px 15px; border-radius: 30px; padding: 30px 15px;
         box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         border: 2px solid #f8c8d4;
     }
-
-    /* ================= 底部导航栏 ================= */
-    .bottom-nav { 
-        position: fixed; bottom: 0; left: 0; width: 100%; 
-        background: rgba(255,255,255,0.85); backdrop-filter: blur(15px); 
-        border-top: 1px solid rgba(255,255,255,0.8); 
-        display: flex; justify-content: space-around; padding: 10px 0 20px; z-index: 1000; 
-    }
-    .nav-item { 
-        text-align: center; font-size: 11px; color: #999; 
-        cursor: pointer; display: flex; flex-direction: column; align-items: center; 
-        gap: 4px; width: 33%; transition: 0.3s;
-    }
-    .nav-item.active { color: #d98a9a; font-weight: 600; }
-    .nav-item:hover { color: #d98a9a; }
-    .nav-icon { font-size: 20px; }
-    .empty-tip { text-align: center; color: #aaa; padding: 40px 20px; font-size: 14px; }
 
     /* ================= 设置弹窗 ================= */
     .settings-modal {
@@ -338,6 +364,7 @@
     }
     .settings-content .btn { width: 100%; margin-top: 10px; background-image: var(--btn-pink); }
     .settings-content .btn-grey { background-image: var(--btn-grey); }
+    .settings-content .btn-reset { background-image: var(--btn-blue); }
 </style>
 </head>
 <body>
@@ -352,12 +379,14 @@
     </div>
     
     <div class="avatar-wrapper">
-        <img src="https://zpsbdymlofvzyskymagh.supabase.co/storage/v1/object/public/assets/avatar-default.png" alt="头像" class="avatar" id="avatar-img" onclick="document.getElementById('avatar-upload').click()">
+        <div class="avatar" id="avatar-img" onclick="document.getElementById('avatar-upload').click()">
+            <img src="" alt="" class="avatar-inner" id="avatar-inner">
+        </div>
         <input type="file" id="avatar-upload" class="avatar-upload" accept="image/*">
     </div>
 
     <ul class="tag-list" id="tag-list">
-        <li class="tag-item active" data-tag="all">📚 全部记录</li>
+        <!-- 文件夹样式通过JS渲染 -->
     </ul>
 
     <div class="date-index-section">
@@ -379,15 +408,16 @@
         <label>背景图片链接（用于分享）</label>
         <input type="text" id="bg-url-input" placeholder="https://example.com/bg.jpg">
         <button class="btn" onclick="saveBgFromUrl()">保存背景</button>
+        <button class="btn btn-reset" onclick="resetBackground()">恢复默认背景</button>
         <button class="btn btn-grey" onclick="closeSettings()">关闭</button>
     </div>
 </div>
 
 <!-- 顶部 -->
 <div class="top-header">
-    <button class="menu-btn" id="menu-btn">☰</button>
-    <div class="title-wrapper">
-        <h1 class="header-title">灵感实验室🪷</h1>
+    <button class="menu-btn" id="menu-btn" style="position: absolute; left: 15px; top: 20px;">☰</button>
+    <div class="title-wrapper" onclick="openSettings()">
+        <h1 class="header-title">Malb♡r☆</h1>
         <p class="date-display" id="date-display"></p>
     </div>
 </div>
@@ -465,7 +495,7 @@ let currentView = 'notes';
 let selectedDate = '';
 let pendingTags = [];
 
-/* ================= 3. 侧边栏与深色模式逻辑 ================= */
+/* ================= 3. 侧边栏逻辑 ================= */
 const sidebar = document.getElementById('sidebar');
 const overlay = document.getElementById('overlay');
 function openSidebar() { sidebar.classList.add('open'); overlay.classList.add('open'); }
@@ -474,13 +504,13 @@ document.getElementById('menu-btn').onclick = openSidebar;
 document.getElementById('close-sidebar').onclick = closeSidebar;
 overlay.onclick = closeSidebar;
 
-// 用户头像上传
+// 用户头像上传（叠加在手机壳里）
 document.getElementById('avatar-upload').onchange = (e) => {
     const file = e.target.files[0];
     if (file) {
         const reader = new FileReader();
         reader.onload = (ev) => {
-            document.getElementById('avatar-img').src = ev.target.result;
+            document.getElementById('avatar-inner').src = ev.target.result;
             localStorage.setItem('userAvatar', ev.target.result);
         };
         reader.readAsDataURL(file);
@@ -488,13 +518,14 @@ document.getElementById('avatar-upload').onchange = (e) => {
 };
 // 加载头像
 const savedAvatar = localStorage.getItem('userAvatar');
-if (savedAvatar) document.getElementById('avatar-img').src = savedAvatar;
+if (savedAvatar) document.getElementById('avatar-inner').src = savedAvatar;
+else document.getElementById('avatar-inner').src = 'https://zpsbdymlofvzyskymagh.supabase.co/storage/v1/object/public/assets/avatar-default.png';
 
 // 日期显示
 const today = new Date();
 document.getElementById('date-display').textContent = `${today.getFullYear()} / ${today.getMonth()+1} / ${today.getDate()}`;
 
-/* ================= 4. 背景设置逻辑 ================= */
+/* ================= 4. 背景设置与恢复默认 ================= */
 function loadBackground() {
     const savedBg = localStorage.getItem('customBg');
     if (savedBg) {
@@ -513,7 +544,7 @@ document.getElementById('bg-upload').onchange = (e) => {
         const base64 = ev.target.result;
         localStorage.setItem('customBg', base64);
         document.body.style.backgroundImage = `url('${base64}')`;
-        alert("背景已保存到本地！如需分享给他人，请把图片链接填入下方。");
+        alert("背景已保存到本地！");
     };
     reader.readAsDataURL(file);
 };
@@ -522,6 +553,13 @@ function saveBgFromUrl() {
     const url = document.getElementById('bg-url-input').value.trim();
     if (url) { localStorage.setItem('customBg', url); document.body.style.backgroundImage = `url('${url}')`; alert("背景已保存！"); closeSettings(); }
     else { alert("请输入图片链接"); }
+}
+
+function resetBackground() {
+    localStorage.removeItem('customBg');
+    document.body.style.backgroundImage = ''; 
+    alert("已恢复为系统默认背景！");
+    closeSettings();
 }
 
 /* ================= 5. 标签与视图切换逻辑 ================= */
@@ -598,9 +636,13 @@ function renderSidebarTags() {
     const list = document.getElementById('tag-list');
     const allTags = new Set();
     notes.forEach(n => { if (n.tags && !n.deleted) n.tags.split(',').forEach(t => allTags.add(t.trim())); });
-    let html = `<li class="tag-item ${currentTag === 'all' ? 'active' : ''}" data-tag="all">📚 全部记录</li>`;
-    allTags.forEach(tag => { html += `<li class="tag-item ${currentTag === tag ? 'active' : ''}" data-tag="${tag}">🏷️ ${escapeHTML(tag)}</li>`; });
+    
+    let html = `<li class="tag-item ${currentTag === 'all' ? 'active' : ''}" data-tag="all"><span class="folder-label">📚 全部记录</span></li>`;
+    allTags.forEach(tag => { 
+        html += `<li class="tag-item ${currentTag === tag ? 'active' : ''}" data-tag="${tag}"><span class="folder-label">🏷️ ${escapeHTML(tag)}</span></li>`; 
+    });
     list.innerHTML = html;
+    
     document.querySelectorAll('.tag-item').forEach(item => {
         item.onclick = () => { currentTag = item.dataset.tag; renderSidebarTags(); renderNotes(); closeSidebar(); };
     });
@@ -632,7 +674,6 @@ function renderNotes() {
         }
         let linkHtml = n.link_url ? `<a href="${n.link_url}" target="_blank" class="note-link">🔗 ${escapeHTML(n.link_url)}</a>` : '';
 
-        // 智能匹配卡片背景
         let cardClass = 'note-card';
         const contentLength = n.content ? n.content.length : 0;
         const hasMedia = !!n.media_url;
