@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>灵感手账</title>
+<style>
+    :root {
+        --bg: #fdfbf7; --card-bg: #ffffff; --text-main: #333333;
+        --text-sub: #888888; --accent: #fbc531; --danger: #ff6b6b;
+        --border: #e8e8e8; --pink: #ffb8c6; --blue: #8ac4ff; --purple: #b8a9ff;
+    }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", sans-serif; background: var(--bg); color: var(--text-main); padding-bottom: 70px; overflow-x: hidden; }
+    
+    /* 顶部问候语 */
+    .header { padding: 25px 20px 15px; }
+    .header h1 { margin: 0; font-size: 24px; color: #222; font-weight: 600; }
+    .header p { margin: 5px 0 0; color: var(--text-sub); font-size: 13px; }
+
+    /* 输入卡片 */
+    .editor-card { background: var(--card-bg); margin: 0 15px 15px; padding: 15px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); border: 1px solid var(--border); }
+    .editor-card textarea { width: 100%; border: none; resize: none; font-size: 15px; font-family: inherit; outline: none; min-height: 70px; color: #333; }
+    .editor-card textarea::placeholder { color: #bbb; }
+    
+    .input-row { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+    .input-row input[type="text"] { flex: 1; border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; font-size: 13px; outline: none; }
+    .input-row input[type="file"] { font-size: 12px; width: 100%; }
+
+    .tag-selector { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+    .tag-btn { padding: 4px 12px; border-radius: 15px; font-size: 12px; border: 1px solid var(--border); background: #fff; cursor: pointer; color: #666; }
+    .tag-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); font-weight: bold; }
+
+    .editor-actions { display: flex; justify-content: flex-end; margin-top: 12px; }
+    .btn { border: none; padding: 8px 16px; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; transition: 0.2s; background: var(--accent); color: #fff; }
+    .btn:disabled { opacity: 0.5; }
+
+    /* 日期选择器 */
+    .date-filter { padding: 0 15px 10px; display: flex; align-items: center; gap: 10px; }
+    .date-filter input[type="date"] { border: 1px solid var(--border); border-radius: 8px; padding: 8px; font-size: 14px; font-family: inherit; background: #fff; outline: none; color: #333; }
+    .date-filter button { background: none; border: none; font-size: 14px; color: var(--accent); font-weight: bold; cursor: pointer; }
+
+    /* 笔记列表 */
+    .note-list { padding: 0 15px; display: flex; flex-direction: column; gap: 12px; }
+    .note-card { background: var(--card-bg); border-radius: 16px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); border: 1px solid var(--border); position: relative; }
+    .note-date { font-size: 11px; color: var(--text-sub); margin-bottom: 6px; display: flex; justify-content: space-between; }
+    .note-tags { display: flex; gap: 6px; margin-bottom: 8px; flex-wrap: wrap; }
+    .note-tag { background: #f0f0f0; padding: 2px 8px; border-radius: 10px; font-size: 11px; color: #666; }
+    .note-content { font-size: 15px; line-height: 1.6; white-space: pre-wrap; margin-bottom: 8px; }
+    .note-media { max-width: 100%; border-radius: 10px; margin-top: 8px; border: 1px solid var(--border); }
+    .note-link { display: inline-block; margin-top: 8px; font-size: 13px; color: var(--accent); text-decoration: underline; word-break: break-all; }
+    .note-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px; padding-top: 10px; border-top: 1px solid #f0f0f0; }
+    .note-actions button { font-size: 12px; padding: 4px 10px; border-radius: 6px; border: none; cursor: pointer; }
+    .btn-danger { background: #ffe0e0; color: var(--danger); }
+    .btn-restore { background: #e0f0ff; color: #3b82f6; }
+
+    /* 底部导航栏 */
+    .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #fff; border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 8px 0 15px; z-index: 1000; }
+    .nav-item { text-align: center; font-size: 11px; color: var(--text-sub); cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; width: 33%; }
+    .nav-item.active { color: var(--accent); font-weight: bold; }
+    .nav-icon { font-size: 20px; }
+    .empty-tip { text-align: center; color: var(--text-sub); padding: 40px 20px; font-size: 14px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+    <h1>Hello, <span id="user-greeting">friend</span> ✨</h1>
+    <p id="date-display"></p>
+</div>
+
+<div class="editor-card">
+    <textarea id="note-content" placeholder="记录你的灵感和废话吧..."></textarea>
+    <div class="input-row">
+        <input type="text" id="note-link" placeholder="添加链接（选填）">
+    </div>
+    <div class="input-row">
+        <input type="file" id="note-media" accept="image/*,video/*,.pdf,.doc,.docx,.txt">
+        <span id="file-name" style="font-size:12px; color:var(--accent);"></span>
+    </div>
+    <div class="tag-selector" id="tag-selector">
+        <button class="tag-btn active" data-tag="碎碎念">💭 碎碎念</button>
+        <button class="tag-btn" data-tag="灵感">💡 灵感</button>
+        <button class="tag-btn" data-tag="日常">📅 日常</button>
+        <button class="tag-btn" data-tag="存档">📦 存档</button>
+    </div>
+    <div class="editor-actions">
+        <button class="btn" id="save-btn">记录一下 ♡</button>
+    </div>
+</div>
+
+<div class="date-filter">
+    <input type="date" id="filter-date">
+    <button id="clear-date">显示全部</button>
+</div>
+
+<div class="note-list" id="note-list"></div>
+
+<!-- 底部导航栏 -->
+<div class="bottom-nav">
+    <div class="nav-item active" id="tab-notes">
+        <span class="nav-icon">📝</span>
+        <span>笔记</span>
+    </div>
+    <div class="nav-item" id="tab-trash">
+        <span class="nav-icon">🗑️</span>
+        <span>垃圾桶</span>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+/* ========== 1. 初始化 Supabase ========== */
+const SUPABASE_URL = "https://zpsbdymlofvzyskymagh.supabase.co";
+const SUPABASE_KEY = "sb_publishable_6jazDy0kesZQBPSBaY77Rg_qMTM6Hze";
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+/* ========== 2. 状态与变量 ========== */
+let notes = [];
+let currentTag = '碎碎念';
+let currentView = 'notes';
+let selectedDate = '';
+
+// 随机生成一个访客昵称
+const names = ['月亮', '云朵', '星星', '小鹿', '兔兔', '梦境', '微风', '橘子'];
+document.getElementById('user-greeting').textContent = names[Math.floor(Math.random() * names.length)];
+
+// 显示今天的日期
+const today = new Date();
+document.getElementById('date-display').textContent = `${today.getFullYear()}年${today.getMonth()+1}月${today.getDate()}日 星期${'日一二三四五六'[today.getDay()]}`;
+
+/* ========== 3. 标签切换 ========== */
+document.querySelectorAll('.tag-btn').forEach(btn => {
+    btn.onclick = () => {
+        document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentTag = btn.dataset.tag;
+    };
+});
+
+/* ========== 4. 文件选择提示 ========== */
+document.getElementById('note-media').onchange = (e) => {
+    const file = e.target.files[0];
+    if (file) document.getElementById('file-name').textContent = file.name;
+};
+
+/* ========== 5. 视图切换（笔记/垃圾桶） ========== */
+document.getElementById('tab-notes').onclick = () => {
+    currentView = 'notes';
+    document.getElementById('tab-notes').classList.add('active');
+    document.getElementById('tab-trash').classList.remove('active');
+    document.querySelector('.editor-card').style.display = 'block';
+    loadNotes();
+};
+
+document.getElementById('tab-trash').onclick = () => {
+    currentView = 'trash';
+    document.getElementById('tab-trash').classList.add('active');
+    document.getElementById('tab-notes').classList.remove('active');
+    document.querySelector('.editor-card').style.display = 'none';
+    loadNotes();
+};
+
+/* ========== 6. 日期过滤 ========== */
+document.getElementById('filter-date').onchange = (e) => {
+    selectedDate = e.target.value;
+    renderNotes();
+};
+document.getElementById('clear-date').onclick = () => {
+    document.getElementById('filter-date').value = '';
+    selectedDate = '';
+    renderNotes();
+};
+
+/* ========== 7. 加载与渲染 ========== */
+async function loadNotes() {
+    const { data, error } = await supabaseClient
+        .from('notes')
+        .select('*')
+        .order('created_at', { ascending: false });
+    
+    if (error) { console.error(error); return; }
+    notes = data || [];
+    renderNotes();
+}
+
+function renderNotes() {
+    const list = document.getElementById('note-list');
+    
+    let filtered = notes.filter(n => n.deleted === (currentView === 'trash'));
+    
+    if (selectedDate) {
+        filtered = filtered.filter(n => n.date === selectedDate);
+    }
+
+    if (filtered.length === 0) {
+        list.innerHTML = `<div class="empty-tip">${currentView === 'notes' ? '还没有记录哦，快写点废话吧 ♡' : '垃圾桶是空的 🗑️'}</div>`;
+        return;
+    }
+
+    list.innerHTML = filtered.map(n => {
+        let mediaHtml = '';
+        if (n.media_url) {
+            if (n.media_type === 'image') {
+                mediaHtml = `<img src="${n.media_url}" class="note-media" />`;
+            } else if (n.media_type === 'video') {
+                mediaHtml = `<video src="${n.media_url}" controls class="note-media"></video>`;
+            } else {
+                mediaHtml = `<a href="${n.media_url}" target="_blank" class="note-link">📎 查看附件：${escapeHTML(n.media_url.split('/').pop())}</a>`;
+            }
+        }
+
+        let linkHtml = n.link_url ? `<a href="${n.link_url}" target="_blank" class="note-link">🔗 ${escapeHTML(n.link_url)}</a>` : '';
+
+        return `
+            <div class="note-card">
+                <div class="note-date">
+                    <span>📅 ${n.date}</span>
+                    <span>${new Date(n.created_at).toLocaleTimeString('zh-CN', {hour: '2-digit', minute:'2-digit'})}</span>
+                </div>
+                <div class="note-tags">
+                    ${n.tags ? n.tags.split(',').map(t => `<span class="note-tag">#${escapeHTML(t.trim())}</span>`).join('') : ''}
+                </div>
+                <div class="note-content">${escapeHTML(n.content)}</div>
+                ${mediaHtml}
+                ${linkHtml}
+                <div class="note-actions">
+                    ${currentView === 'notes' 
+                        ? `<button class="btn-danger" onclick="moveToTrash('${n.id}')">移入垃圾桶</button>`
+                        : `<button class="btn-restore" onclick="restoreNote('${n.id}')">恢复</button>
+                           <button class="btn-danger" onclick="deletePermanently('${n.id}')">彻底删除</button>`
+                    }
+                </div>
+            </div>
+        `;
+    }).join("");
+}
+
+function escapeHTML(text) {
+    return String(text || "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
+/* ========== 8. 保存笔记 ========== */
+document.getElementById('save-btn').onclick = async function() {
+    const content = document.getElementById('note-content').value.trim();
+    const link = document.getElementById('note-link').value.trim();
+    const fileInput = document.getElementById('note-media');
+    const file = fileInput.files[0];
+    const tags = Array.from(document.querySelectorAll('.tag-btn.active')).map(b => b.dataset.tag).join(',');
+
+    if (!content && !file && !link) return alert("写点什么或者加个文件吧 ♡");
+
+    this.disabled = true;
+    this.textContent = "保存中...";
+
+    let mediaUrl = null;
+    let mediaType = null;
+
+    if (file) {
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${Date.now()}.${fileExt}`;
+        const { error: uploadError } = await supabaseClient.storage
+            .from('note-media')
+            .upload(fileName, file);
+
+        if (uploadError) {
+            alert("文件上传失败：" + uploadError.message);
+            this.disabled = false; this.textContent = "记录一下 ♡";
+            return;
+        }
+        const { data: urlData } = supabaseClient.storage.from('note-media').getPublicUrl(fileName);
+        mediaUrl = urlData.publicUrl;
+        
+        if (file.type.startsWith('image/')) mediaType = 'image';
+        else if (file.type.startsWith('video/')) mediaType = 'video';
+        else mediaType = 'file';
+    }
+
+    const now = new Date();
+    const dateStr = now.toISOString().split('T')[0];
+
+    const { error } = await supabaseClient.from('notes').insert({
+        id: Date.now().toString(36),
+        date: dateStr,
+        content: content,
+        media_url: mediaUrl,
+        media_type: mediaType,
+        link_url: link,
+        tags: tags,
+        deleted: false
+    });
+
+    if (error) {
+        alert("保存失败：" + error.message);
+    } else {
+        document.getElementById('note-content').value = '';
+        document.getElementById('note-link').value = '';
+        fileInput.value = '';
+        document.getElementById('file-name').textContent = '';
+        await loadNotes();
+    }
+    this.disabled = false;
+    this.textContent = "记录一下 ♡";
+};
+
+/* ========== 9. 删除与恢复 ========== */
+async function moveToTrash(id) {
+    if (!confirm("移入垃圾桶？")) return;
+    await supabaseClient.from('notes').update({ deleted: true }).eq('id', id);
+    await loadNotes();
+}
+
+async function restoreNote(id) {
+    await supabaseClient.from('notes').update({ deleted: false }).eq('id', id);
+    await loadNotes();
+}
+
+async function deletePermanently(id) {
+    if (!confirm("彻底删除？不可恢复！")) return;
+    await supabaseClient.from('notes').delete().eq('id', id);
+    await loadNotes();
+}
+
+/* ========== 初始启动 ========== */
+loadNotes();
+</script>
+</body>
+</html>
