@@ -10,36 +10,34 @@
         /* 核心：黑体字 */
         --font-main: "SimHei", "Heiti SC", "Microsoft YaHei", "PingFang SC", sans-serif;
 
-        /* ⚠️ 请把你图床链接（Supabase 的 public 前缀）统一替换下面的 "你的图床链接" ⚠️ */
-        
         /* 背景图链接 */
-        --bg-day: url('你的图床链接/bg-day-pc.png');
-        --bg-night: url('你的图床链接/bg-night-pc.png');
-        --bg-day-mobile: url('你的图床链接/bg-day-mobile.png');
-        --bg-night-mobile: url('你的图床链接/bg-night-mobile.png');
+        --bg-day: url('https://zpsbdymlofvzyskymagh.supabase.co/storage/v1/object/public/assets/bg-day-pc.png');
+        --bg-night: url('https://zpsbdymlofvzyskymagh.supabase.co/storage/v1/object/public/assets/bg-night-pc.png');
+        --bg-day-mobile: url('https://zpsbdymlofvzyskymagh.supabase.co/storage/v1/object/public/assets/bg-day-mobile.png');
+        --bg-night-mobile: url('https://zpsbdymlofvzyskymagh.supabase.co/storage/v1/object/public/assets/bg-night-mobile.png');
         
         /* 装饰图片链接 */
-        --deco-img: url('你的图床链接/deco.png');
-        --title-bg-img: url('你的图床链接/title-bg.png');
-        --avatar-default: url('你的图床链接/avatar-default.png');
-        --trash-bg: url('你的图床链接/trash-bg.png');
+        --deco-img: url('https://zpsbdymlofvzyskymagh.supabase.co/storage/v1/object/public/assets/deco.png');
+        --title-bg-img: url('https://zpsbdymlofvzyskymagh.supabase.co/storage/v1/object/public/assets/title-bg.png');
+        --avatar-default: url('https://zpsbdymlofvzyskymagh.supabase.co/storage/v1/object/public/assets/avatar-default.png');
+        --trash-bg: url('https://zpsbdymlofvzyskymagh.supabase.co/storage/v1/object/public/assets/trash-bg.png');
 
         /* 卡片图片链接 */
-        --card-text-short: url('你的图床链接/card-text-short.png');
-        --card-text-long: url('你的图床链接/card-text-long.png');
-        --card-text-big: url('你的图床链接/card-text-big.png');
-        --card-img-1: url('你的图床链接/card-img-1.png');
-        --card-img-3: url('你的图床链接/card-img-3.png');
-        --card-img-6: url('你的图床链接/card-img-6.png');
-        --card-img-only: url('你的图床链接/card-img-only.png');
+        --card-text-short: url('https://zpsbdymlofvzyskymagh.supabase.co/storage/v1/object/public/assets/card-text-short.png');
+        --card-text-long: url('https://zpsbdymlofvzyskymagh.supabase.co/storage/v1/object/public/assets/card-text-long.png');
+        --card-text-big: url('https://zpsbdymlofvzyskymagh.supabase.co/storage/v1/object/public/assets/card-text-big.png');
+        --card-img-1: url('https://zpsbdymlofvzyskymagh.supabase.co/storage/v1/object/public/assets/card-img-1.png');
+        --card-img-3: url('https://zpsbdymlofvzyskymagh.supabase.co/storage/v1/object/public/assets/card-img-3.png');
+        --card-img-6: url('https://zpsbdymlofvzyskymagh.supabase.co/storage/v1/object/public/assets/card-img-6.png');
+        --card-img-only: url('https://zpsbdymlofvzyskymagh.supabase.co/storage/v1/object/public/assets/card-img-only.png');
 
         /* 按钮图片链接 */
-        --btn-blank: url('你的图床链接/btn-blank.png');
-        --btn-blue: url('你的图床链接/btn-blue.png');
-        --btn-grey: url('你的图床链接/btn-grey.png');
-        --btn-no: url('你的图床链接/btn-no.png');
-        --btn-pink: url('你的图床链接/btn-pink.png');
-        --btn-yes: url('你的图床链接/btn-yes.png');
+        --btn-blank: url('https://zpsbdymlofvzyskymagh.supabase.co/storage/v1/object/public/assets/btn-blank.png');
+        --btn-blue: url('https://zpsbdymlofvzyskymagh.supabase.co/storage/v1/object/public/assets/btn-blue.png');
+        --btn-grey: url('https://zpsbdymlofvzyskymagh.supabase.co/storage/v1/object/public/assets/btn-grey.png');
+        --btn-no: url('https://zpsbdymlofvzyskymagh.supabase.co/storage/v1/object/public/assets/btn-no.png');
+        --btn-pink: url('https://zpsbdymlofvzyskymagh.supabase.co/storage/v1/object/public/assets/btn-pink.png');
+        --btn-yes: url('https://zpsbdymlofvzyskymagh.supabase.co/storage/v1/object/public/assets/btn-yes.png');
 
         --text-main: #333;
         --text-sub: #666;
@@ -51,7 +49,7 @@
     
     body { 
         margin: 0; 
-        font-family: var(--font-main); /* 应用黑体 */
+        font-family: var(--font-main);
         background-color: #fdfbf7;
         background-image: var(--bg-day);
         background-size: cover; 
@@ -110,7 +108,7 @@
     .tag-list li {
         padding: 12px 15px; border-radius: 12px; cursor: pointer; margin-bottom: 8px;
         font-size: 14px; color: #555; transition: all 0.3s ease;
-        background-image: var(--btn-blank); /* 使用空白按钮作为底 */
+        background-image: var(--btn-blank); 
         background-size: 100% 100%; background-repeat: no-repeat;
         border: none;
     }
@@ -143,7 +141,7 @@
         background: none; border: none; cursor: pointer; 
         background-image: var(--btn-grey); background-size: 100% 100%; 
         width: 45px; height: 45px;
-        text-indent: -9999px; color: transparent; /* 使用灰色按钮 */
+        text-indent: -9999px; color: transparent; 
     }
     
     /* 标题 */
@@ -207,7 +205,7 @@
     /* 编辑器内部 */
     .editor-card textarea { 
         width: 100%; border: none; resize: none; font-size: 15px; 
-        font-family: var(--font-main); /* 输入框黑体 */
+        font-family: var(--font-main); 
         outline: none; min-height: 80px; color: #333; 
         padding: 10px; background: rgba(255,255,255,0.5); border-radius: 10px;
     }
@@ -227,7 +225,7 @@
     .tag-input-row button { 
         background: none; color: transparent; border: none; 
         background-image: var(--btn-blue); background-size: 100% 100%; 
-        text-indent: -9999px; width: 80px; height: 40px; cursor: pointer; /* 使用蓝色按钮 */
+        text-indent: -9999px; width: 80px; height: 40px; cursor: pointer; 
     }
     .selected-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
     .selected-tag { 
@@ -256,7 +254,7 @@
         background: none; border: none; font-size: 13px; color: #d98a9a; font-weight: bold; cursor: pointer; 
     }
 
-    /* ================= 笔记列表（卡片匹配逻辑） ================= */
+    /* ================= 笔记列表 ================= */
     .note-list { padding: 0 30px; display: flex; flex-direction: column; gap: 20px; position: relative; z-index: 2; }
     
     .note-card {
@@ -290,8 +288,8 @@
     .note-link { display: inline-block; margin-top: 10px; font-size: 13px; color: #d98a9a; text-decoration: underline; word-break: break-all; }
     .note-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 15px; padding-top: 15px; border-top: 1px dashed rgba(0,0,0,0.05); }
     .note-actions button { font-size: 12px; padding: 0; border: none; cursor: pointer; transition: 0.3s; background: none; background-size: 100% 100%; text-indent: -9999px; color: transparent; }
-    .btn-danger { background-image: var(--btn-no); width: 60px; height: 30px; } /* NO 按钮 */
-    .btn-restore { background-image: var(--btn-yes); width: 60px; height: 30px; } /* YES 按钮 */
+    .btn-danger { background-image: var(--btn-no); width: 60px; height: 30px; } 
+    .btn-restore { background-image: var(--btn-yes); width: 60px; height: 30px; } 
     .btn-danger:hover, .btn-restore:hover { opacity: 0.8; }
 
     /* ================= 垃圾桶 ================= */
@@ -354,7 +352,7 @@
     </div>
     
     <div class="avatar-wrapper">
-        <img src="你的图床链接/avatar-default.png" alt="头像" class="avatar" id="avatar-img" onclick="document.getElementById('avatar-upload').click()">
+        <img src="https://zpsbdymlofvzyskymagh.supabase.co/storage/v1/object/public/assets/avatar-default.png" alt="头像" class="avatar" id="avatar-img" onclick="document.getElementById('avatar-upload').click()">
         <input type="file" id="avatar-upload" class="avatar-upload" accept="image/*">
     </div>
 
