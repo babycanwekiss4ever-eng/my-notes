@@ -3,18 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Malb♡r☆</title>
+<title>Rainy Day Diary</title>
 <style>
     /* ================= 全局变量与基础 ================= */
     :root {
         --font-main: "SimHei", "Heiti SC", "Microsoft YaHei", "PingFang SC", sans-serif;
         
-        /* 背景图（电脑端） */
-        --bg-day: url('https://zpsbdymlofvzyskymagh.supabase.co/storage/v1/object/public/assets/bg-day-pc.png');
-        --bg-night: url('https://zpsbdymlofvzyskymagh.supabase.co/storage/v1/object/public/assets/bg-night-pc.png');
-        /* 手机端壁纸 */
-        --bg-day-mobile: url('https://zpsbdymlofvzyskymagh.supabase.co/storage/v1/object/public/assets/bg-day-mobile.png');
-        --bg-night-mobile: url('https://zpsbdymlofvzyskymagh.supabase.co/storage/v1/object/public/assets/bg-night-mobile.png');
+        /* 背景图 - 使用你 Supabase 的素材 */
+        --bg-default: url('https://zpsbdymlofvzyskymagh.supabase.co/storage/v1/object/public/assets/bg-day-pc.png');
         
         /* 装饰图片链接 */
         --deco-img: url('https://zpsbdymlofvzyskymagh.supabase.co/storage/v1/object/public/assets/deco.png');
@@ -38,48 +34,40 @@
         --btn-pink: url('https://zpsbdymlofvzyskymagh.supabase.co/storage/v1/object/public/assets/btn-pink.png');
         --btn-yes: url('https://zpsbdymlofvzyskymagh.supabase.co/storage/v1/object/public/assets/btn-yes.png');
 
-        --text-main: #333;
-        --text-sub: #666;
-        --accent: #f8c8d4;
+        /* 雨天主题配色 */
+        --text-main: #3a3a3a;
+        --text-sub: #6b6b6b;
+        --accent: #8fa8b8; /* 灰蓝色 */
         --border-radius: 16px;
+        --glass-bg: rgba(255, 255, 255, 0.5);
+        --glass-border: rgba(255, 255, 255, 0.6);
     }
     
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     
-    /* 核心：电脑端默认使用电脑背景图 */
     body { 
         margin: 0; 
         font-family: var(--font-main);
-        background-color: #fdfbf7;
-        background-image: var(--bg-day);
+        background-color: #e8eef2; /* 阴天底色 */
+        background-image: var(--bg-default);
         background-size: cover; 
         background-position: center; 
         background-attachment: fixed;
         color: var(--text-main); 
-        padding-bottom: 30px; /* 移除了底部导航栏，减少底部留白 */
+        padding-bottom: 30px; 
         overflow-x: hidden; 
         transition: background-image 0.4s ease; 
         line-height: 1.6;
     }
+    /* 玻璃雾面效果遮罩 */
     body::before {
         content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(255,255,255,0.3); z-index: -1; pointer-events: none;
+        background: rgba(200, 210, 220, 0.3); 
+        z-index: -1; pointer-events: none;
+        backdrop-filter: blur(2px);
     }
 
-    /* 深色模式切换 */
-    @media (prefers-color-scheme: dark) {
-        body { background-image: var(--bg-night); }
-        body::before { background: rgba(0,0,0,0.4); }
-    }
-    /* 手机端尺寸切换为手机壁纸 */
-    @media (max-width: 768px) {
-        body { background-image: var(--bg-day-mobile); }
-        @media (prefers-color-scheme: dark) {
-            body { background-image: var(--bg-night-mobile); }
-        }
-    }
-
-    /* ================= 顶部（标题居中，点击可设置） ================= */
+    /* ================= 顶部 ================= */
     .top-header { 
         padding: 20px 15px 10px; 
         display: flex; 
@@ -102,7 +90,7 @@
     }
     .title-wrapper::before { 
         content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-        background: rgba(255,255,255,0.7); border-radius: var(--border-radius); 
+        background: rgba(255,255,255,0.6); border-radius: var(--border-radius); 
     }
     .header-title {
         font-size: 28px; color: #333; margin: 0; font-weight: 500;
@@ -117,16 +105,15 @@
         margin: 10px 0; position: relative; z-index: 2;
     }
 
-    /* ================= 切换栏（按钮图片+文字标注） ================= */
+    /* ================= 切换栏 ================= */
     .nav-tabs { display: flex; gap: 10px; padding: 0 15px 15px; flex-wrap: wrap; position: relative; z-index: 2; }
     .nav-tab {
         flex: 1; text-align: center; padding: 12px 10px; font-size: 14px;
         background: none; border: none; cursor: pointer; color: #555;
         background-image: var(--btn-blank); background-size: 100% 100%; 
         background-repeat: no-repeat; transition: all 0.3s ease;
-        position: relative;
     }
-    /* 选中时变成灰暗色，字体白色（加阴影防看不清） */
+    /* 选中状态：灰暗色 + 白色文字 */
     .nav-tab.active { 
         filter: grayscale(100%) brightness(0.6); 
         color: #ffffff !important; 
@@ -134,12 +121,12 @@
         text-shadow: 1px 1px 2px rgba(0,0,0,0.5); 
     }
 
-    /* ================= 窗口卡片（全宽） ================= */
+    /* ================= 窗口卡片 ================= */
     .window-card {
-        background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(15px);
+        background: var(--glass-bg); backdrop-filter: blur(15px);
         margin: 0 15px 20px; padding: 0; border-radius: var(--border-radius);
         box-shadow: 0 4px 20px rgba(0,0,0,0.04);
-        border: 1px solid rgba(255,255,255,0.8); position: relative; overflow: hidden;
+        border: 1px solid var(--glass-border); position: relative; overflow: hidden;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
         z-index: 2;
     }
@@ -149,7 +136,7 @@
         display: flex; justify-content: space-between; align-items: center;
     }
     .window-title-bar .dots { display: flex; gap: 6px; }
-    .window-title-bar .dots span { width: 8px; height: 8px; border-radius: 50%; background: #f8c8d4; }
+    .window-title-bar .dots span { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
     .window-body { padding: 20px; }
 
     /* 编辑器内部 */
@@ -157,12 +144,12 @@
         width: 100%; border: none; resize: none; font-size: 15px; 
         font-family: var(--font-main); 
         outline: none; min-height: 80px; color: #333; 
-        padding: 10px; background: rgba(255,255,255,0.5); border-radius: 10px;
+        padding: 10px; background: rgba(255,255,255,0.4); border-radius: 10px;
     }
     .input-row { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap; align-items: center; }
     .input-row input[type="text"] { 
         flex: 1; border: 1px solid #eee; border-radius: 10px; padding: 10px; 
-        font-size: 13px; outline: none; background: rgba(255,255,255,0.7); width: 100%;
+        font-size: 13px; outline: none; background: rgba(255,255,255,0.6); width: 100%;
         font-family: var(--font-main);
     }
     .input-row input[type="file"] { font-size: 12px; width: 100%; color: #888; }
@@ -171,7 +158,7 @@
     .tag-input-row { display: flex; gap: 10px; margin-top: 15px; }
     .tag-input-row input { 
         flex: 1; border: 1px solid #eee; border-radius: 10px; padding: 10px; 
-        font-size: 13px; outline: none; background: rgba(255,255,255,0.7);
+        font-size: 13px; outline: none; background: rgba(255,255,255,0.6);
         font-family: var(--font-main);
     }
     .tag-input-row button { 
@@ -185,12 +172,12 @@
     /* 选中标签 */
     .selected-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
     .selected-tag { 
-        background: rgba(248, 200, 212, 0.2); padding: 4px 12px; border-radius: 20px; 
-        font-size: 12px; color: #d98a9a; display: flex; align-items: center; gap: 6px; 
+        background: rgba(143, 168, 184, 0.2); padding: 4px 12px; border-radius: 20px; 
+        font-size: 12px; color: var(--accent); display: flex; align-items: center; gap: 6px; 
     }
-    .selected-tag button { background: none; border: none; color: #d98a9a; cursor: pointer; font-size: 14px; }
+    .selected-tag button { background: none; border: none; color: var(--accent); cursor: pointer; font-size: 14px; }
     
-    /* 记录按钮（使用粉色按钮图片+文字） */
+    /* 记录按钮 */
     .editor-actions { display: flex; justify-content: flex-end; margin-top: 20px; }
     .btn { 
         border: none; padding: 0; cursor: pointer; transition: 0.3s; 
@@ -205,18 +192,18 @@
     /* 日期过滤器 */
     .date-filter { padding: 0 15px 15px; display: flex; align-items: center; gap: 15px; flex-wrap: wrap; z-index: 2; position: relative; }
     .date-filter input[type="date"] { 
-        border: 1px solid #f8c8d4; border-radius: 12px; padding: 8px 15px; 
-        font-size: 13px; font-family: inherit; background: rgba(255,255,255,0.8); outline: none; 
+        border: 1px solid #d0dce4; border-radius: 12px; padding: 8px 15px; 
+        font-size: 13px; font-family: inherit; background: rgba(255,255,255,0.7); outline: none; 
         font-family: var(--font-main);
     }
     .date-filter button { 
-        background: none; border: none; font-size: 13px; color: #d98a9a; font-weight: bold; cursor: pointer; 
+        background: none; border: none; font-size: 13px; color: var(--accent); font-weight: bold; cursor: pointer; 
     }
 
     /* ================= 侧边栏 ================= */
     .sidebar {
         position: fixed; top: 0; left: 0; width: 280px; height: 100vh;
-        background: rgba(255, 255, 255, 0.9); 
+        background: rgba(255, 255, 255, 0.85); 
         backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
         border-right: 1px solid rgba(255,255,255,0.5);
         padding: 30px 20px; overflow-y: auto; z-index: 2000;
@@ -228,19 +215,19 @@
     .sidebar h2 { font-size: 18px; margin: 0; font-weight: 600; color: #555; }
     .close-sidebar { background: none; border: none; font-size: 24px; cursor: pointer; color: #999; }
     
-    /* 头像框：移除手机图片，改成默认圆框可上传 */
+    /* 头像框 */
     .avatar-wrapper { text-align: center; margin-bottom: 20px; }
     .avatar {
         width: 80px; height: 80px; border-radius: 50%; 
         margin: 0 auto; display: flex; align-items: center; justify-content: center;
-        background: #f0f0f0; border: 2px dashed #f8c8d4;
+        background: #f0f0f0; border: 2px dashed var(--accent);
         cursor: pointer; overflow: hidden; position: relative;
     }
     .avatar-inner { width: 100%; height: 100%; object-fit: cover; display: none; }
     .avatar-text { color: #aaa; font-size: 12px; }
     .avatar-upload { display: none; }
 
-    /* 侧边栏标签（使用按钮图片，底部黑色文字标注） */
+    /* 侧边栏标签 */
     .tag-list { list-style: none; padding: 0; margin: 0; }
     .tag-list li {
         padding: 15px 15px 10px; margin-bottom: 18px; 
@@ -250,14 +237,13 @@
         display: flex; flex-direction: column; justify-content: flex-end; min-height: 55px;
         transition: all 0.3s ease;
     }
-    /* 深色文字标注在左下角 */
     .tag-list li .folder-label {
         font-size: 12px; font-weight: bold; color: #333; opacity: 0.9;
-        margin-top: auto; /* 推到底部 */
+        margin-top: auto;
     }
     .tag-list li:hover { transform: translateX(4px); }
     .tag-list li.active { 
-        filter: grayscale(100%) brightness(0.6); /* 选中变灰 */
+        filter: grayscale(100%) brightness(0.6);
     }
     .tag-list li.active .folder-label { color: #fff; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
 
@@ -265,7 +251,7 @@
     .date-index-section { margin-top: 20px; }
     .date-index-section h3 { font-size: 14px; color: #888; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
     .date-picker-input {
-        width: 100%; padding: 10px; border: 1px solid #f8c8d4; border-radius: 12px;
+        width: 100%; padding: 10px; border: 1px solid #d0dce4; border-radius: 12px;
         font-family: inherit; font-size: 14px; outline: none; background: #fff;
     }
 
@@ -280,7 +266,7 @@
     /* ================= 笔记列表 ================= */
     .note-list { padding: 0 15px; display: flex; flex-direction: column; gap: 20px; position: relative; z-index: 2; }
     .note-card {
-        background-color: rgba(255,255,255,0.7); backdrop-filter: blur(10px);
+        background-color: rgba(255,255,255,0.6); backdrop-filter: blur(10px);
         border: 1px solid rgba(255,255,255,0.8); border-radius: var(--border-radius);
         box-shadow: 0 4px 15px rgba(0,0,0,0.03);
         position: relative; overflow: hidden; transition: transform 0.3s;
@@ -304,12 +290,11 @@
     .note-card .note-body { padding: 15px 20px; }
     .note-date { font-size: 11px; color: #aaa; margin-bottom: 10px; display: flex; justify-content: space-between; }
     .note-tags { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
-    .note-tag { background: rgba(248, 200, 212, 0.2); padding: 2px 8px; border-radius: 10px; font-size: 11px; color: #d98a9a; }
+    .note-tag { background: rgba(143, 168, 184, 0.15); padding: 2px 8px; border-radius: 10px; font-size: 11px; color: var(--accent); }
     .note-content { font-size: 15px; line-height: 1.7; white-space: pre-wrap; margin-bottom: 12px; color: #333; font-family: var(--font-main); }
     .note-media { max-width: 100%; border-radius: 10px; margin-top: 10px; border: 1px solid rgba(0,0,0,0.05); }
-    .note-link { display: inline-block; margin-top: 10px; font-size: 13px; color: #d98a9a; text-decoration: underline; word-break: break-all; }
+    .note-link { display: inline-block; margin-top: 10px; font-size: 13px; color: var(--accent); text-decoration: underline; word-break: break-all; }
     
-    /* 卡片底部操作按钮：使用 btn-no, btn-yes 图片，并加上文字 */
     .note-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 15px; padding-top: 15px; border-top: 1px dashed rgba(0,0,0,0.05); }
     .note-actions button { font-size: 12px; padding: 0; border: none; cursor: pointer; transition: 0.3s; background: none; background-size: 100% 100%; 
         display: flex; align-items: center; justify-content: center;
@@ -324,7 +309,7 @@
         background-image: var(--trash-bg); background-size: cover; background-position: center;
         margin: 20px 15px; border-radius: 30px; padding: 30px 15px;
         box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        border: 2px solid #f8c8d4;
+        border: 2px solid var(--accent);
     }
 
     /* ================= 设置弹窗 ================= */
@@ -335,7 +320,7 @@
     }
     .settings-modal.open { display: flex; }
     .settings-content {
-        background: rgba(255,255,255,0.95); border: 1px solid #f8c8d4; border-radius: var(--border-radius);
+        background: rgba(255,255,255,0.95); border: 1px solid var(--accent); border-radius: var(--border-radius);
         width: 100%; max-width: 400px; padding: 30px; box-shadow: 0 20px 60px rgba(0,0,0,0.15);
     }
     .settings-content h3 { margin: 0 0 20px 0; color: #333; font-size: 18px; font-weight: 500; }
@@ -346,7 +331,6 @@
         margin-bottom: 20px; font-size: 13px; outline: none; background: rgba(255,255,255,0.8);
         font-family: var(--font-main);
     }
-    /* 设置里的三个按钮，也都使用按钮图片 */
     .settings-content .btn { width: 100%; margin-top: 10px; background-image: var(--btn-pink); }
     .settings-content .btn-grey { background-image: var(--btn-grey); }
     .settings-content .btn-reset { background-image: var(--btn-blue); }
@@ -372,7 +356,7 @@
     </div>
 
     <ul class="tag-list" id="tag-list">
-        <!-- 文件夹样式通过JS渲染 -->
+        <!-- 标签通过JS渲染 -->
     </ul>
 
     <div class="date-index-section">
@@ -403,7 +387,7 @@
 <div class="top-header">
     <button class="menu-btn" id="menu-btn" style="position: absolute; left: 15px; top: 20px; background: none; border: none; font-size: 24px; cursor: pointer;">☰</button>
     <div class="title-wrapper" onclick="openSettings()">
-        <h1 class="header-title">Malb♡r☆</h1>
+        <h1 class="header-title">Rainy Day</h1>
         <p class="date-display" id="date-display"></p>
     </div>
 </div>
@@ -614,7 +598,6 @@ function renderSidebarTags() {
     const allTags = new Set();
     notes.forEach(n => { if (n.tags && !n.deleted) n.tags.split(',').forEach(t => allTags.add(t.trim())); });
     
-    // 使用按钮图片作为底，添加文字标注
     let html = `<li class="tag-item ${currentTag === 'all' ? 'active' : ''}" data-tag="all"><span class="folder-label">📚 全部记录</span></li>`;
     allTags.forEach(tag => { 
         html += `<li class="tag-item ${currentTag === tag ? 'active' : ''}" data-tag="${tag}"><span class="folder-label">🏷️ ${escapeHTML(tag)}</span></li>`; 
